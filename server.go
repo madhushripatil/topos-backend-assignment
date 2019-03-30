@@ -29,16 +29,8 @@ func AllBuildingFootPrints(writer http.ResponseWriter, req *http.Request) {
 	fmt.Fprintln(writer, "Setting up server")
 }
 
-/*func AllBuildingFootPrints(writer http.ResponseWriter, req *http.Request) {
-	fmt.Fprintln(writer, "Setting up server")
-}
-
-func AllBuildingFootPrints(writer http.ResponseWriter, req *http.Request) {
-	fmt.Fprintln(writer, "Setting up server")
-}*/
-
 func main() {
-	//defer db.MgoSession.Close()
+	defer db.MgoSession.Close()
 	fmt.Println("Starting go service...")
 
 	route := mux.NewRouter()
