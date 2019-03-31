@@ -6,8 +6,8 @@ import (
 	"time"
 )
 
-const COLLECTION = "building"
-const DBNAME = "buildingFootprintsDB"
+var CollectionName string
+var DbName string
 
 type Buildings struct {
 	Buildings []Building `json:"buildings"`
@@ -30,8 +30,16 @@ type Building struct {
 	MPlutoBBL    int           `bson:"mplutoBBL" json:"mplutoBBL"`
 }
 
+/**
+Helper method to set DB properties
+*/
+func SetDbProperties(c string, d string) {
+	CollectionName = c
+	DbName = d
+}
+
 func getDBCollection(session *mgo.Session) *mgo.Collection {
-	return session.DB(DBNAME).C(COLLECTION)
+	return session.DB(DbName).C(CollectionName)
 }
 
 /**
@@ -92,4 +100,13 @@ Helper method to update a specific document
 func (building *Building) UpdateBuildingFootPrint(session *mgo.Session, b Building) error {
 	err := getDBCollection(session).UpdateId(b.ID, &b)
 	return err
+}
+
+/**
+Helper method to find all Buildings by type
+*/
+func (building *Building) FindAllBuildingsByType(session *mgo.Session, bldType int) ([]Building, error) {
+	var buildings []Building
+	err := getDBCollection(session).Find(bson.M{"featCode": bldType}).All(&buildings)
+	return buildings, err
 }

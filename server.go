@@ -3,14 +3,15 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 	"gopkg.in/mgo.v2/bson"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
-	"topos-backend-assignment/models"
-
-	"github.com/gorilla/mux"
 	"topos-backend-assignment/db"
+	"topos-backend-assignment/models"
 )
 
 type ResponseMessage struct {
@@ -18,6 +19,11 @@ type ResponseMessage struct {
 	ErrorMsg string `json:"error"`
 	Message  string `json:"message"`
 }
+
+var DbName string
+var CollectionName string
+var ServerHost string
+var ServerPort string
 
 /**
 API URL - http://localhost:8000/
@@ -213,11 +219,56 @@ func AddBuildingFootPrints(writer http.ResponseWriter, request *http.Request) {
 }
 
 /**
+API URL - http://localhost:8000/buildingFootprints/type/{bldType}
+Method	- GET
+Params	- None
+This API returns all the Buildings by Type
+*/
+func GetBuildingsByType(writer http.ResponseWriter, request *http.Request) {
+	var bld models.Building
+	params := mux.Vars(request)
+	var js []byte
+	var err error
+	var buildings []models.Building
+	var msg ResponseMessage
+	var bldngType int
+
+	bldngType, err = strconv.Atoi(params["bldType"])
+	buildings, err = bld.FindAllBuildingsByType(db.MgoSession, bldngType)
+	if err != nil {
+		msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error getting Buildings by type"}
+		js, err = json.Marshal(msg)
+	} else {
+		if len(buildings) != 0 {
+			js, err = json.Marshal(buildings)
+		} else {
+			msg = ResponseMessage{Status: http.StatusNoContent, ErrorMsg: "", Message: "Empty Dataset"}
+			js, err = json.Marshal(msg)
+		}
+	}
+	writer.Header().Set("Content-Type", "application/json")
+	writer.Write(js)
+}
+
+/**
 Main method - Execution starts here
 */
 func main() {
 	defer db.MgoSession.Close()
 	fmt.Println("Starting services...")
+
+	// Load env file
+	e := godotenv.Load("buildingFootprint.env")
+	if e != nil {
+		fmt.Print(e)
+	}
+
+	DbName = os.Getenv("db_name")
+	CollectionName = os.Getenv("collection_name")
+	ServerHost = os.Getenv("server_host")
+	ServerPort = os.Getenv("server_port")
+
+	port := fmt.Sprintf(":%s", ServerPort)
 
 	route := mux.NewRouter()
 	route.HandleFunc("/", AllBuildingsCount).Methods("GET")
@@ -226,12 +277,14 @@ func main() {
 	route.HandleFunc("/buildingFootprints/{id}", DeleteBuildingFootPrints).Methods("DELETE")
 	route.HandleFunc("/buildingFootprints", AllBuildingFootPrints).Methods("GET")
 	route.HandleFunc("/buildingFootprints/{id}", GetBuildingFootPrintsById).Methods("GET")
+	route.HandleFunc("/buildingFootprints/type/{bldType}", GetBuildingsByType).Methods("GET")
 
 	// The following function call makes a database connection
-	db.ConnectToDatabase()
+	db.ConnectToDatabase(ServerHost)
+	models.SetDbProperties(CollectionName, DbName)
 
 	// The Server listens on port for incoming requests and routes requests
-	if err := http.ListenAndServe(":8000", route); err != nil {
+	if err := http.ListenAndServe(port, route); err != nil {
 		log.Fatal(err)
 	}
 }
