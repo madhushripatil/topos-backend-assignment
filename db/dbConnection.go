@@ -9,7 +9,6 @@ import (
 
 // Exported object
 var MgoSession *mgo.Session
-var hosts []string
 
 func ConnectToDatabase(dbName string, dbHost string, dbUser string, dbPass string, dbTimeout string) {
 
