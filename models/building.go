@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"time"
@@ -74,8 +75,12 @@ Helper method to find a document by ID
 */
 func (building *Building) FindBuildingFootPrintById(session *mgo.Session, id string) (Building, error) {
 	var bld Building
-	bld, err := findById(session, id)
-	return bld, err
+	if bson.IsObjectIdHex(id) {
+		bld, err := findById(session, id)
+		return bld, err
+	} else {
+		return bld, errors.New("please provide a valid Object ID")
+	}
 }
 
 /**

@@ -3,6 +3,7 @@ package db
 import (
 	"gopkg.in/mgo.v2"
 	"log"
+	"os"
 	"strconv"
 	"time"
 )
@@ -12,7 +13,16 @@ var MgoSession *mgo.Session
 
 func ConnectToDatabase(dbName string, dbHost string, dbUser string, dbPass string, dbTimeout string) {
 
-	log.Println("Starting mongodb session")
+	f, err := os.OpenFile("BuildingFootprintAnalyzer.log",
+		os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Println(err)
+	}
+	defer f.Close()
+
+	logger := log.New(f, "prefix", log.LstdFlags)
+	logger.Println("Starting mongodb session")
+
 	timeout, err := strconv.Atoi(dbTimeout)
 
 	mongoDBDialInfo := &mgo.DialInfo{
@@ -27,10 +37,10 @@ func ConnectToDatabase(dbName string, dbHost string, dbUser string, dbPass strin
 	// to our MongoDB.
 	mongoSession, err := mgo.DialWithInfo(mongoDBDialInfo)
 	if err != nil {
-		log.Fatalf("CreateSession: %s\n", err)
+		logger.Println("CreateSession: %s\n", err)
 		panic(err)
 	} else {
 		MgoSession = mongoSession
-		log.Println("Created DB Session. Connected to:", dbName)
+		logger.Println("Created DB Session. Connected to:", dbName)
 	}
 }
