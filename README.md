@@ -39,12 +39,13 @@ https://www.mongodb.com/download-center/community
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+
 
 ## Built With
 
 * [Go](https://golang.org/) - Open source programming language
 * [Mongo DB](https://www.mongodb.com/what-is-mongodb) - Document Database with scalability and flexibility
+* [GoLand IDE] (https://www.jetbrains.com/go/?utm_expid=.qV9Irwa4SS-xPJHMhpNehw.0&utm_referrer=) A clever IDE to GO
 
 ## Authors
 
