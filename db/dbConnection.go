@@ -3,16 +3,35 @@ package db
 import (
 	"gopkg.in/mgo.v2"
 	"log"
+	"strconv"
+	"time"
 )
 
 // Exported object
 var MgoSession *mgo.Session
+var hosts []string
 
-func ConnectToDatabase(serverHost string) {
+func ConnectToDatabase(dbName string, dbHost string, dbUser string, dbPass string, dbTimeout string) {
+
 	log.Println("Starting mongodb session")
-	session, err := mgo.Dial(serverHost)
-	if err != nil {
-		panic(err)
+	timeout, err := strconv.Atoi(dbTimeout)
+
+	mongoDBDialInfo := &mgo.DialInfo{
+		Addrs:    []string{dbHost},
+		Timeout:  time.Duration(timeout) * time.Second,
+		Database: dbName,
+		Username: dbUser,
+		Password: dbPass,
 	}
-	MgoSession = session
+
+	// Create a session which maintains a pool of socket connections
+	// to our MongoDB.
+	mongoSession, err := mgo.DialWithInfo(mongoDBDialInfo)
+	if err != nil {
+		log.Fatalf("CreateSession: %s\n", err)
+		panic(err)
+	} else {
+		MgoSession = mongoSession
+		log.Println("Created DB Session. Connected to:", dbName)
+	}
 }

@@ -22,8 +22,11 @@ type ResponseMessage struct {
 
 var DbName string
 var CollectionName string
-var ServerHost string
 var ServerPort string
+var DBHost string
+var DBUsername string
+var DBPassword string
+var DBTimeout string
 
 /**
 API URL - http://localhost:8000/
@@ -255,7 +258,7 @@ Main method - Execution starts here
 */
 func main() {
 	defer db.MgoSession.Close()
-	fmt.Println("Starting services...")
+	fmt.Println("Starting BuildingFootprint services...")
 
 	// Load env file
 	e := godotenv.Load("buildingFootprint.env")
@@ -265,8 +268,11 @@ func main() {
 
 	DbName = os.Getenv("db_name")
 	CollectionName = os.Getenv("collection_name")
-	ServerHost = os.Getenv("server_host")
+	DBHost = os.Getenv("db_host")
 	ServerPort = os.Getenv("server_port")
+	DBTimeout = os.Getenv("db_timeout")
+	DBUsername = os.Getenv("db_username")
+	DBPassword = os.Getenv("db_pass")
 
 	port := fmt.Sprintf(":%s", ServerPort)
 
@@ -280,7 +286,7 @@ func main() {
 	route.HandleFunc("/buildingFootprints/type/{bldType}", GetBuildingsByType).Methods("GET")
 
 	// The following function call makes a database connection
-	db.ConnectToDatabase(ServerHost)
+	db.ConnectToDatabase(DbName, DBHost, DBUsername, DBPassword, DBTimeout)
 	models.SetDbProperties(CollectionName, DbName)
 
 	// The Server listens on port for incoming requests and routes requests
