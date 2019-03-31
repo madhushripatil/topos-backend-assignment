@@ -8,9 +8,9 @@ import (
 // Exported object
 var MgoSession *mgo.Session
 
-func ConnectToDatabase() {
+func ConnectToDatabase(serverHost string) {
 	log.Println("Starting mongodb session")
-	session, err := mgo.Dial("127.0.0.1")
+	session, err := mgo.Dial(serverHost)
 	if err != nil {
 		panic(err)
 	}
