@@ -33,3 +33,19 @@ operating system and architecture, visit
 https://golang.org/doc/install/source or load [doc/install-source.html](./doc/install-source.html)
 in your web browser for source installation instructions.
 
+#### Mongo DB
+
+https://www.mongodb.com/download-center/community
+
+## Deployment
+
+Add additional notes about how to deploy this on a live system
+
+## Built With
+
+* [Go](https://golang.org/) - Open source programming language
+* [Mongo DB](https://www.mongodb.com/what-is-mongodb) - Document Database with scalability and flexibility
+
+## Authors
+
+* **Madhushri Patil**
