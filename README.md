@@ -33,11 +33,37 @@ operating system and architecture, visit
 https://golang.org/doc/install/source or load [doc/install-source.html](./doc/install-source.html)
 in your web browser for source installation instructions.
 
+Set GOROOT, GOPOATH env variables
+
+Check if the correct values are set using
+$go env command on Linux
+
 #### Mongo DB
+
+MongoDB offers both an Enterprise and Community version of its powerful non-relational database. 
 
 https://www.mongodb.com/download-center/community
 
+#### Gorilla Mux Package for routing
+
+[Gorilla Mux](https://github.com/gorilla/mux) - go get github.com/gorilla/mux
+
+#### Mgo Package for MongoDB connections
+
+[Rich MongoDB driver](https://gopkg.in/mgo.v2) - go get gopkg.in/mgo.v2
+
+#### bson Package for BSON GO specification
+
+[GO BSON Specification implementation](https://gopkg.in/mgo.v2/bson) - go get gopkg.in/mgo.v2/bson
+
+#### joho godotenv Package for loading env file
+
+[Application specific configuration](https://github.com/joho/godotenv) - go get github.com/joho/godotenv
+
 ## Deployment
+
+Set your Database and REST Endpoint parameters in the [buildingFootprint.env](https://github.com/madhushripatil/topos-backend-assignment/blob/master/buildingFootprint.env) file provided.
+
 
 
 
