@@ -49,9 +49,9 @@ func AllBuildingsCount(writer http.ResponseWriter, req *http.Request) {
 }
 
 /**
-API URL - http://localhost:8000/buildingFootprints
-Method	- GET
-Params	- None
+	API URL - http://localhost:8000/buildingFootprints
+	Method	- GET
+	Params	- None
 This API returns all the BuildingFootPrint Data from the Database
 */
 func AllBuildingFootPrints(writer http.ResponseWriter, request *http.Request) {
