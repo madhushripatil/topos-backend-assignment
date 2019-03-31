@@ -34,41 +34,61 @@ func getDBCollection(session *mgo.Session) *mgo.Collection {
 	return session.DB(DBNAME).C(COLLECTION)
 }
 
+/**
+Helper method to find a document by ID
+*/
 func findById(session *mgo.Session, id string) (Building, error) {
 	var bld Building
 	err := getDBCollection(session).FindId(bson.ObjectIdHex(id)).One(&bld)
 	return bld, err
 }
 
+/**
+Helper method to find all documents in a collection
+*/
 func (building *Building) GetAllBuildingFootPrints(session *mgo.Session) ([]Building, error) {
 	var buildings []Building
 	err := getDBCollection(session).Find(bson.M{}).All(&buildings)
 	return buildings, err
 }
 
-func (building *Building) GetAllBuildingsCount(session *mgo.Session) ([]Building, error, int) {
-	var buildings []Building
+/**
+Helper method to find count of all documents in a collection
+*/
+func (building *Building) GetAllBuildingsCount(session *mgo.Session) (error, int) {
 	var i interface{}
 	cnt, err := getDBCollection(session).Find(i).Count()
-	return buildings, err, cnt
+	return err, cnt
 }
 
+/**
+Helper method to find a document by ID
+*/
 func (building *Building) FindBuildingFootPrintById(session *mgo.Session, id string) (Building, error) {
 	var bld Building
 	bld, err := findById(session, id)
 	return bld, err
 }
 
+/**
+Helper method to create a new document
+*/
 func (building *Building) CreateBuildingFootPrint(session *mgo.Session, b Building) error {
 	err := getDBCollection(session).Insert(&b)
 	return err
 }
 
+/**
+Helper method to delete a specific document
+*/
 func (building *Building) DeleteBuildingFootPrint(session *mgo.Session, b Building) error {
 	err := getDBCollection(session).Remove(&b)
 	return err
 }
 
+/**
+Helper method to update a specific document
+*/
 func (building *Building) UpdateBuildingFootPrint(session *mgo.Session, b Building) error {
 	err := getDBCollection(session).UpdateId(b.ID, &b)
 	return err

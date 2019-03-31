@@ -19,8 +19,6 @@ type ResponseMessage struct {
 	Message  string `json:"message"`
 }
 
-var buildings []models.Building
-
 /**
 API URL - http://localhost:8000/
 Method	- GET
@@ -34,7 +32,7 @@ func AllBuildingsCount(writer http.ResponseWriter, req *http.Request) {
 	var msg ResponseMessage
 	var cnt int
 
-	buildings, err, cnt = bld.GetAllBuildingsCount(db.MgoSession)
+	err, cnt = bld.GetAllBuildingsCount(db.MgoSession)
 
 	if err != nil {
 		msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error getting Building count"}
@@ -49,9 +47,9 @@ func AllBuildingsCount(writer http.ResponseWriter, req *http.Request) {
 }
 
 /**
-	API URL - http://localhost:8000/buildingFootprints
-	Method	- GET
-	Params	- None
+API URL - http://localhost:8000/buildingFootprints
+Method	- GET
+Params	- None
 This API returns all the BuildingFootPrint Data from the Database
 */
 func AllBuildingFootPrints(writer http.ResponseWriter, request *http.Request) {
@@ -214,9 +212,12 @@ func AddBuildingFootPrints(writer http.ResponseWriter, request *http.Request) {
 	writer.Write(js)
 }
 
+/**
+Main method - Execution starts here
+*/
 func main() {
 	defer db.MgoSession.Close()
-	fmt.Println("Starting go service...")
+	fmt.Println("Starting services...")
 
 	route := mux.NewRouter()
 	route.HandleFunc("/", AllBuildingsCount).Methods("GET")
@@ -226,8 +227,10 @@ func main() {
 	route.HandleFunc("/buildingFootprints", AllBuildingFootPrints).Methods("GET")
 	route.HandleFunc("/buildingFootprints/{id}", GetBuildingFootPrintsById).Methods("GET")
 
+	// The following function call makes a database connection
 	db.ConnectToDatabase()
 
+	// The Server listens on port for incoming requests and routes requests
 	if err := http.ListenAndServe(":8000", route); err != nil {
 		log.Fatal(err)
 	}
