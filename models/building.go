@@ -140,6 +140,16 @@ func (building *Building) FindAllBuildingsByType(session *mgo.Session, bldType i
 }
 
 /**
+Helper method to find all Buildings taller than minimum and wider than minimum area given
+*/
+func (building *Building) FindAllBuildingsTallerAndWider(session *mgo.Session, h float64, a float64) ([]Building, error) {
+	var buildings []Building
+	err := getDBCollection(session).Find(bson.M{"$and": []bson.M{bson.M{"heightRoof": bson.M{"$gt": h}},
+		bson.M{"shapeArea": bson.M{"$gt": a}}}}).All(&buildings)
+	return buildings, err
+}
+
+/**
 Helper method to check if the struct fields are empty
 */
 func isEmpty(k reflect.Kind, e reflect.Value) bool {

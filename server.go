@@ -270,6 +270,41 @@ func GetBuildingsByType(writer http.ResponseWriter, request *http.Request) {
 }
 
 /**
+API URL - http://<host>:<port>/buildingFootprints/type/{bldType}
+Method	- GET
+Params	- None
+This API returns all the Buildings by Type
+*/
+func GetTallAndWideBuildings(writer http.ResponseWriter, request *http.Request) {
+	var bld models.Building
+	params := mux.Vars(request)
+	var js []byte
+	var err error
+	var buildings []models.Building
+	var msg ResponseMessage
+	var height float64
+	var area float64
+
+	height, err = strconv.ParseFloat(params["minHeight"], 32)
+	area, err = strconv.ParseFloat(params["minArea"], 32)
+	buildings, err = bld.FindAllBuildingsTallerAndWider(db.MgoSession, height, area)
+	if err != nil {
+		logger.Println("Error getting taller and wider buildings...", err)
+		msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error getting taller and wider buildings"}
+		js, err = json.Marshal(msg)
+	} else {
+		if len(buildings) != 0 {
+			js, err = json.Marshal(buildings)
+		} else {
+			msg = ResponseMessage{Status: http.StatusNoContent, ErrorMsg: "", Message: "No such data present"}
+			js, err = json.Marshal(msg)
+		}
+	}
+	writer.Header().Set("Content-Type", "application/json")
+	writer.Write(js)
+}
+
+/**
 Main method - Execution starts here
 */
 func main() {
@@ -316,6 +351,7 @@ func main() {
 		route.HandleFunc("/buildingFootprints", AllBuildingFootPrints).Methods("GET")
 		route.HandleFunc("/buildingFootprints/{id}", GetBuildingFootPrintsById).Methods("GET")
 		route.HandleFunc("/buildingFootprints/type/{bldType}", GetBuildingsByType).Methods("GET")
+		route.HandleFunc("/buildingFootprints/buildingHeightAndArea/{minHeight}/{minArea}", GetTallAndWideBuildings).Methods("GET")
 
 		// The following function call makes a database connection
 		db.ConnectToDatabase(DbName, DBHost, DBUsername, DBPassword, DBTimeout)
