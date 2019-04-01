@@ -108,7 +108,7 @@ func (building *Building) UpdateBuildingFootPrint(session *mgo.Session, b Buildi
 	v := reflect.ValueOf(updBldng)
 	filter := bson.M{"_id": building.ID}
 	updateMap := map[string]interface{}{}
-
+	updBldng.LastModified = time.Now()
 	for i := 0; i < v.NumField(); i++ {
 		flag := isEmpty(v.Field(i).Kind(), v.Field(i))
 		nm := v.Type().Field(i).Tag.Get("json")

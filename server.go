@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 	"topos-backend-assignment/db"
 	"topos-backend-assignment/models"
 )
@@ -223,6 +224,7 @@ func AddBuildingFootPrints(writer http.ResponseWriter, request *http.Request) {
 		js, err = json.Marshal(msg)
 	} else {
 		bld.ID = bson.NewObjectId()
+		bld.LastModified = time.Now()
 		if err = bld.CreateBuildingFootPrint(db.MgoSession, bld); err != nil {
 			logger.Println("Error adding building footprint data...", err)
 			msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error Creating FootPrint Data"}
