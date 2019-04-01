@@ -4,6 +4,7 @@ import (
 	"errors"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"reflect"
 	"time"
 )
 
@@ -102,8 +103,30 @@ func (building *Building) DeleteBuildingFootPrint(session *mgo.Session, b Buildi
 /**
 Helper method to update a specific document
 */
-func (building *Building) UpdateBuildingFootPrint(session *mgo.Session, b Building) error {
-	err := getDBCollection(session).UpdateId(b.ID, &b)
+func (building *Building) UpdateBuildingFootPrint(session *mgo.Session, b Building, updBldng Building) error {
+
+	v := reflect.ValueOf(updBldng)
+	filter := bson.M{"_id": building.ID}
+	updateMap := map[string]interface{}{}
+
+	for i := 0; i < v.NumField(); i++ {
+		flag := isEmpty(v.Field(i).Kind(), v.Field(i))
+		nm := v.Type().Field(i).Tag.Get("json")
+
+		if !flag {
+			// add non empty values to update
+			updateMap[nm] = v.Field(i).Interface()
+		}
+	}
+
+	// create a map of values to update
+	incDoc := bson.M{}
+	for k, v := range updateMap {
+		incDoc[k] = v
+	}
+	change := bson.M{"$set": incDoc}
+
+	err := getDBCollection(session).Update(filter, change)
 	return err
 }
 
@@ -114,4 +137,30 @@ func (building *Building) FindAllBuildingsByType(session *mgo.Session, bldType i
 	var buildings []Building
 	err := getDBCollection(session).Find(bson.M{"featCode": bldType}).All(&buildings)
 	return buildings, err
+}
+
+/**
+Helper method to check if the struct fields are empty
+*/
+func isEmpty(k reflect.Kind, e reflect.Value) bool {
+
+	empty := false
+
+	switch k {
+	case reflect.String:
+		if e.String() == "" {
+			empty = true
+		}
+
+	case reflect.Float32, reflect.Float64:
+		if e.Float() == 0 {
+			empty = true
+		}
+
+	case reflect.Int16, reflect.Int32, reflect.Int:
+		if e.Int() == 0 {
+			empty = true
+		}
+	}
+	return empty
 }

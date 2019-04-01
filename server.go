@@ -166,6 +166,7 @@ This API updates the BuildingFootPrint Data for a specific ID
 func UpdateBuildingFootPrints(writer http.ResponseWriter, request *http.Request) {
 
 	var bld models.Building
+	var bldUpdate models.Building
 	params := mux.Vars(request)
 	var js []byte
 	var err error
@@ -178,13 +179,20 @@ func UpdateBuildingFootPrints(writer http.ResponseWriter, request *http.Request)
 		js, err = json.Marshal(msg)
 	} else {
 		if (models.Building{}) != bld {
-			if err = bld.UpdateBuildingFootPrint(db.MgoSession, bld); err != nil {
-				logger.Println("Error updating building footprint data...", err)
-				msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error Updating FootPrint Data"}
+
+			if err = json.NewDecoder(request.Body).Decode(&bldUpdate); err != nil {
+				logger.Println("Error parsing request...", err)
+				msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error parsing request"}
 				js, err = json.Marshal(msg)
 			} else {
-				msg = ResponseMessage{Status: http.StatusOK, ErrorMsg: "None", Message: "BuildingFootPrint successfully updated!"}
-				js, err = json.Marshal(msg)
+				if err = bld.UpdateBuildingFootPrint(db.MgoSession, bld, bldUpdate); err != nil {
+					logger.Println("Error updating building footprint data...", err)
+					msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error Updating FootPrint Data"}
+					js, err = json.Marshal(msg)
+				} else {
+					msg = ResponseMessage{Status: http.StatusOK, ErrorMsg: "None", Message: "BuildingFootPrint successfully updated!"}
+					js, err = json.Marshal(msg)
+				}
 			}
 		} else {
 			msg = ResponseMessage{Status: http.StatusNoContent, ErrorMsg: "", Message: "No Such BuildingFootPrint"}
