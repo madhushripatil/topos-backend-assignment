@@ -239,7 +239,7 @@ func AddBuildingFootPrints(writer http.ResponseWriter, request *http.Request) {
 /**
 API URL - http://<host>:<port>/buildingFootprints/type/{bldType}
 Method	- GET
-Params	- None
+Params	- bldType : feat code of the building type
 This API returns all the Buildings by Type
 */
 func GetBuildingsByType(writer http.ResponseWriter, request *http.Request) {
@@ -270,10 +270,11 @@ func GetBuildingsByType(writer http.ResponseWriter, request *http.Request) {
 }
 
 /**
-API URL - http://<host>:<port>/buildingFootprints/type/{bldType}
+API URL - http://<host>:<port>/buildingFootprints/buildingHeightAndArea/{minHeight}/{minArea}
 Method	- GET
-Params	- None
-This API returns all the Buildings by Type
+Params	- minHeight : the height with reference to which taller buildings are to be returned
+Params	- minArea : the area with reference to which larger area buildings are to be returned
+This API returns all the Buildings taller and larger than the given values
 */
 func GetTallAndWideBuildings(writer http.ResponseWriter, request *http.Request) {
 	var bld models.Building
@@ -291,6 +292,39 @@ func GetTallAndWideBuildings(writer http.ResponseWriter, request *http.Request) 
 	if err != nil {
 		logger.Println("Error getting taller and wider buildings...", err)
 		msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error getting taller and wider buildings"}
+		js, err = json.Marshal(msg)
+	} else {
+		if len(buildings) != 0 {
+			js, err = json.Marshal(buildings)
+		} else {
+			msg = ResponseMessage{Status: http.StatusNoContent, ErrorMsg: "", Message: "No such data present"}
+			js, err = json.Marshal(msg)
+		}
+	}
+	writer.Header().Set("Content-Type", "application/json")
+	writer.Write(js)
+}
+
+/**
+API URL - http://<host>:<port>/buildingFootprints/demolishedStructuresByConstructedYear/{year}
+Method	- GET
+Params	- year : Year for the demolished structures to be returned
+This API returns all the demolished structures in a given year
+*/
+func GetAllDemolishedStructuresByYear(writer http.ResponseWriter, request *http.Request) {
+	var bld models.Building
+	params := mux.Vars(request)
+	var js []byte
+	var err error
+	var buildings []models.Building
+	var msg ResponseMessage
+	var y int
+
+	y, err = strconv.Atoi(params["year"])
+	buildings, err = bld.FindAllDemolishedStructruesByYear(db.MgoSession, y)
+	if err != nil {
+		logger.Println("Error getting demolished structures...", err)
+		msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error getting demolished structures"}
 		js, err = json.Marshal(msg)
 	} else {
 		if len(buildings) != 0 {
@@ -352,6 +386,7 @@ func main() {
 		route.HandleFunc("/buildingFootprints/{id}", GetBuildingFootPrintsById).Methods("GET")
 		route.HandleFunc("/buildingFootprints/type/{bldType}", GetBuildingsByType).Methods("GET")
 		route.HandleFunc("/buildingFootprints/buildingHeightAndArea/{minHeight}/{minArea}", GetTallAndWideBuildings).Methods("GET")
+		route.HandleFunc("/buildingFootprints/demolishedStructuresByConstructedYear/{year}", GetAllDemolishedStructuresByYear).Methods("GET")
 
 		// The following function call makes a database connection
 		db.ConnectToDatabase(DbName, DBHost, DBUsername, DBPassword, DBTimeout)
