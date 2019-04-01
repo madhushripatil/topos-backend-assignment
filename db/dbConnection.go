@@ -10,6 +10,18 @@ import (
 
 // Exported object
 var MgoSession *mgo.Session
+var BuildingCollection string
+var DatabaseName string
+var UserLoginCollection string
+
+/**
+Helper method to set DB properties
+*/
+func SetDbProperties(cc string, d string, uc string) {
+	BuildingCollection = cc
+	DatabaseName = d
+	UserLoginCollection = uc
+}
 
 func ConnectToDatabase(dbName string, dbHost string, dbUser string, dbPass string, dbTimeout string) {
 

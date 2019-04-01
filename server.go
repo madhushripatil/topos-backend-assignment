@@ -9,17 +9,18 @@ import (
 	"os"
 	"topos-backend-assignment/controller"
 	"topos-backend-assignment/db"
-	"topos-backend-assignment/models"
 )
 
 var DbName string
-var CollectionName string
+var BuildingCollectionName string
 var ServerPort string
 var DBHost string
 var DBUsername string
 var DBPassword string
 var DBTimeout string
+var UserLoginCollectionName string
 var Logger *log.Logger
+var JwtKey []byte
 
 /**
 Main method - Execution starts here
@@ -39,7 +40,9 @@ func main() {
 
 	// Load env file
 	Logger.Println("Loading the configuration file...")
-	e := godotenv.Load("buildingFootprint.env")
+	envFile := fmt.Sprintf("%s.env", os.Getenv("BUILDING_ENV"))
+	//envFile := "development.env"
+	e := godotenv.Load(envFile)
 
 	if e != nil {
 		// close the application if the configuration file open fails
@@ -51,12 +54,14 @@ func main() {
 
 		// Connect to the database and start services
 		DbName = os.Getenv("db_name")
-		CollectionName = os.Getenv("collection_name")
+		BuildingCollectionName = os.Getenv("bldng_collection_name")
 		DBHost = os.Getenv("db_host")
 		ServerPort = os.Getenv("server_port")
 		DBTimeout = os.Getenv("db_timeout")
 		DBUsername = os.Getenv("db_username")
 		DBPassword = os.Getenv("db_pass")
+		UserLoginCollectionName = os.Getenv("userlogin_collection_name")
+		JwtKey = []byte(os.Getenv("jwt_key"))
 
 		port := fmt.Sprintf(":%s", ServerPort)
 
@@ -71,10 +76,14 @@ func main() {
 		route.HandleFunc("/buildingFootprints/buildingHeightAndArea/{minHeight}/{minArea}", controller.GetTallAndWideBuildings).Methods("GET")
 		route.HandleFunc("/buildingFootprints/demolishedStructuresByConstructedYear/{year}", controller.GetAllDemolishedStructuresByYear).Methods("GET")
 
+		route.HandleFunc("/authenticate/login", controller.LoginUser).Methods("POST")
+		route.HandleFunc("/authenticate/signup", controller.SignUp).Methods("POST")
+
 		// The following function call makes a database connection
 		db.ConnectToDatabase(DbName, DBHost, DBUsername, DBPassword, DBTimeout)
-		models.SetDbProperties(CollectionName, DbName)
+		db.SetDbProperties(BuildingCollectionName, DbName, UserLoginCollectionName)
 		controller.UseLogger(Logger)
+		controller.SetJWTSecret(JwtKey)
 
 		// The Server listens on port for incoming requests and routes requests
 		if err := http.ListenAndServe(port, route); err != nil {

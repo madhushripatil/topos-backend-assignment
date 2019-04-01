@@ -6,14 +6,8 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"reflect"
 	"time"
+	"topos-backend-assignment/db"
 )
-
-var CollectionName string
-var DbName string
-
-type Buildings struct {
-	Buildings []Building `json:"buildings"`
-}
 
 type Building struct {
 	ID           bson.ObjectId `bson:"_id" json:"bin"`
@@ -32,16 +26,8 @@ type Building struct {
 	MPlutoBBL    int           `bson:"mplutoBBL" json:"mplutoBBL"`
 }
 
-/**
-Helper method to set DB properties
-*/
-func SetDbProperties(c string, d string) {
-	CollectionName = c
-	DbName = d
-}
-
-func getDBCollection(session *mgo.Session) *mgo.Collection {
-	return session.DB(DbName).C(CollectionName)
+func getBuildingCollection(session *mgo.Session) *mgo.Collection {
+	return session.DB(db.DatabaseName).C(db.BuildingCollection)
 }
 
 /**
@@ -49,7 +35,7 @@ Helper method to find a document by ID
 */
 func findById(session *mgo.Session, id string) (Building, error) {
 	var bld Building
-	err := getDBCollection(session).FindId(bson.ObjectIdHex(id)).One(&bld)
+	err := getBuildingCollection(session).FindId(bson.ObjectIdHex(id)).One(&bld)
 	return bld, err
 }
 
@@ -58,7 +44,7 @@ Helper method to find all documents in a collection
 */
 func (building *Building) GetAllBuildingFootPrints(session *mgo.Session) ([]Building, error) {
 	var buildings []Building
-	err := getDBCollection(session).Find(bson.M{}).All(&buildings)
+	err := getBuildingCollection(session).Find(bson.M{}).All(&buildings)
 	return buildings, err
 }
 
@@ -67,7 +53,7 @@ Helper method to find count of all documents in a collection
 */
 func (building *Building) GetAllBuildingsCount(session *mgo.Session) (error, int) {
 	var i interface{}
-	cnt, err := getDBCollection(session).Find(i).Count()
+	cnt, err := getBuildingCollection(session).Find(i).Count()
 	return err, cnt
 }
 
@@ -88,7 +74,7 @@ func (building *Building) FindBuildingFootPrintById(session *mgo.Session, id str
 Helper method to create a new document
 */
 func (building *Building) CreateBuildingFootPrint(session *mgo.Session, b Building) error {
-	err := getDBCollection(session).Insert(&b)
+	err := getBuildingCollection(session).Insert(&b)
 	return err
 }
 
@@ -96,7 +82,7 @@ func (building *Building) CreateBuildingFootPrint(session *mgo.Session, b Buildi
 Helper method to delete a specific document
 */
 func (building *Building) DeleteBuildingFootPrint(session *mgo.Session, b Building) error {
-	err := getDBCollection(session).Remove(&b)
+	err := getBuildingCollection(session).Remove(&b)
 	return err
 }
 
@@ -126,7 +112,7 @@ func (building *Building) UpdateBuildingFootPrint(session *mgo.Session, b Buildi
 	}
 	change := bson.M{"$set": incDoc}
 
-	err := getDBCollection(session).Update(filter, change)
+	err := getBuildingCollection(session).Update(filter, change)
 	return err
 }
 
@@ -135,7 +121,7 @@ Helper method to find all Buildings by type
 */
 func (building *Building) FindAllBuildingsByType(session *mgo.Session, bldType int) ([]Building, error) {
 	var buildings []Building
-	err := getDBCollection(session).Find(bson.M{"featCode": bldType}).All(&buildings)
+	err := getBuildingCollection(session).Find(bson.M{"featCode": bldType}).All(&buildings)
 	return buildings, err
 }
 
@@ -144,7 +130,7 @@ Helper method to find all Buildings taller than minimum and larger than minimum 
 */
 func (building *Building) FindAllBuildingsTallerAndWider(session *mgo.Session, h float64, a float64) ([]Building, error) {
 	var buildings []Building
-	err := getDBCollection(session).Find(bson.M{"$and": []bson.M{bson.M{"heightRoof": bson.M{"$gt": h}},
+	err := getBuildingCollection(session).Find(bson.M{"$and": []bson.M{bson.M{"heightRoof": bson.M{"$gt": h}},
 		bson.M{"shapeArea": bson.M{"$gt": a}}}}).All(&buildings)
 	return buildings, err
 }
@@ -154,7 +140,7 @@ Helper method to find all demolished structures constructed in a given year
 */
 func (building *Building) FindAllDemolishedStructruesByYear(session *mgo.Session, y int) ([]Building, error) {
 	var buildings []Building
-	err := getDBCollection(session).Find(bson.M{"$and": []bson.M{bson.M{"year": y},
+	err := getBuildingCollection(session).Find(bson.M{"$and": []bson.M{bson.M{"year": y},
 		bson.M{"lastStatus": "Demolition"}}}).All(&buildings)
 	return buildings, err
 }
