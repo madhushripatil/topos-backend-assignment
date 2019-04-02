@@ -12,6 +12,7 @@ import (
 API URL - http://<host>:<port>/transform/archiveDemolishedStructures
 Method	- POST
 Params	- None
+Header	- Authorization : <JWT>
 This API archives all the demolished structures
 */
 func ArchiveAllDemolishedStructures(writer http.ResponseWriter, request *http.Request) {

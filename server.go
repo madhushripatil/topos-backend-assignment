@@ -20,6 +20,7 @@ var DBUsername string
 var DBPassword string
 var DBTimeout string
 var UserLoginCollectionName string
+var BldngFeatTypeCollectionName string
 var Logger *log.Logger
 var JwtKey []byte
 
@@ -56,6 +57,7 @@ func main() {
 		DbName = os.Getenv("db_name")
 		BuildingCollectionName = os.Getenv("bldng_collection_name")
 		DemolishedCollectionName = os.Getenv("demolished_collection_name")
+		BldngFeatTypeCollectionName = os.Getenv("bldng_feat_type_collection_name")
 		DBHost = os.Getenv("db_host")
 		ServerPort = os.Getenv("server_port")
 		DBTimeout = os.Getenv("db_timeout")
@@ -84,7 +86,7 @@ func main() {
 
 		// The following function call makes a database connection
 		db.ConnectToDatabase(DbName, DBHost, DBUsername, DBPassword, DBTimeout)
-		db.SetDbProperties(DbName, BuildingCollectionName, DemolishedCollectionName, UserLoginCollectionName)
+		db.SetDbProperties(DbName, BuildingCollectionName, DemolishedCollectionName, UserLoginCollectionName, BldngFeatTypeCollectionName)
 		controller.UseLogger(Logger)
 		controller.SetJWTSecret(JwtKey)
 

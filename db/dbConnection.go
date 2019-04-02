@@ -14,16 +14,18 @@ var BuildingCollection string
 var DatabaseName string
 var UserLoginCollection string
 var DemolishedCollection string
+var BuildingFeatTypeCollection string
 var logger *log.Logger
 
 /**
 Helper method to set DB properties
 */
-func SetDbProperties(dbName string, bldngColl string, demolishedColl string, userColl string) {
+func SetDbProperties(dbName string, bldngColl string, demolishedColl string, userColl string, bldngFeatTypeColl string) {
 	DatabaseName = dbName
 	BuildingCollection = bldngColl
 	DemolishedCollection = demolishedColl
 	UserLoginCollection = userColl
+	BuildingFeatTypeCollection = bldngFeatTypeColl
 }
 
 func ConnectToDatabase(dbName string, dbHost string, dbUser string, dbPass string, dbTimeout string) {

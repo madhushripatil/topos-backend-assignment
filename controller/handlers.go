@@ -30,6 +30,7 @@ func UseLogger(l *log.Logger) {
 API URL - http://<host>:<port>/
 Method	- GET
 Params	- None
+Header	- Authorization : <JWT>
 This API returns the count of all the BuildingFootPrint Data in the Database
 */
 func AllBuildingsCount(writer http.ResponseWriter, request *http.Request) {
@@ -59,6 +60,7 @@ func AllBuildingsCount(writer http.ResponseWriter, request *http.Request) {
 API URL - http://<host>:<port>/buildingFootprints
 Method	- GET
 Params	- None
+Header	- Authorization : <JWT>
 This API returns all the BuildingFootPrint Data from the Database
 */
 func AllBuildingFootPrints(writer http.ResponseWriter, request *http.Request) {
@@ -93,6 +95,7 @@ func AllBuildingFootPrints(writer http.ResponseWriter, request *http.Request) {
 API URL - http://<host>:<port>/buildingFootprints/{id}
 Method	- GET
 Params	- id : Building footprint ID
+Header	- Authorization : <JWT>
 This API returns the BuildingFootPrint Data for a specific ID
 */
 func GetBuildingFootPrintsById(writer http.ResponseWriter, request *http.Request) {
@@ -128,6 +131,7 @@ func GetBuildingFootPrintsById(writer http.ResponseWriter, request *http.Request
 API URL - http://<host>:<port>/buildingFootprints/{id}
 Method	- DELETE
 Params	- id : Building footprint ID
+Header	- Authorization : <JWT>
 This API deletes the BuildingFootPrint Data for a specific ID
 */
 func DeleteBuildingFootPrints(writer http.ResponseWriter, request *http.Request) {
@@ -169,6 +173,7 @@ func DeleteBuildingFootPrints(writer http.ResponseWriter, request *http.Request)
 API URL - http://<host>:<port>/buildingFootprints/{id}
 Method	- PUT
 Params	- id : Building footprint ID
+Header	- Authorization : <JWT>
 Request Body - JSON Object containing all the fields to be updated
 This API updates the BuildingFootPrint Data for a specific ID
 */
@@ -220,6 +225,7 @@ func UpdateBuildingFootPrints(writer http.ResponseWriter, request *http.Request)
 API URL - http://<host>:<port>/buildingFootprints
 Method	- POST
 Params	- None
+Header	- Authorization : <JWT>
 Request Body - JSON Object containing all the fields
 This API deletes the BuildingFootPrint Data for a specific ID
 */
@@ -257,7 +263,8 @@ func AddBuildingFootPrints(writer http.ResponseWriter, request *http.Request) {
 /**
 API URL - http://<host>:<port>/buildingFootprints/type/{bldType}
 Method	- GET
-Params	- bldType : feat code of the building type
+Params	- bldType : type of the building (example - Garage, Building, etc.)
+Header	- Authorization : <JWT>
 This API returns all the Buildings by Type
 */
 func GetBuildingsByType(writer http.ResponseWriter, request *http.Request) {
@@ -267,13 +274,15 @@ func GetBuildingsByType(writer http.ResponseWriter, request *http.Request) {
 	var err error
 	var buildings []models.Building
 	var msg ResponseMessage
-	var bldngType int
+	var bldngType string
+	var bldngCode int
 
 	valid, js = IsTokenValid(request)
 	if valid {
 		// token is valid and no other error, proceed
-		bldngType, err = strconv.Atoi(params["bldType"])
-		buildings, err = bld.FindAllBuildingsByType(db.MgoSession, bldngType)
+		bldngType = params["bldType"]
+		bldngCode, err = models.GetFeatCodeByName(db.MgoSession, bldngType)
+		buildings, err = bld.FindAllBuildingsByType(db.MgoSession, bldngCode)
 		if err != nil {
 			Logger.Println("Error getting buildings by type...", err)
 			msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error getting Buildings by type"}
@@ -296,6 +305,7 @@ API URL - http://<host>:<port>/buildingFootprints/buildingHeightAndArea/{minHeig
 Method	- GET
 Params	- minHeight : the height with reference to which taller buildings are to be returned
 Params	- minArea : the area with reference to which larger area buildings are to be returned
+Header	- Authorization : <JWT>
 This API returns all the Buildings taller and larger than the given values
 */
 func GetTallAndWideBuildings(writer http.ResponseWriter, request *http.Request) {
@@ -335,6 +345,7 @@ func GetTallAndWideBuildings(writer http.ResponseWriter, request *http.Request) 
 API URL - http://<host>:<port>/buildingFootprints/demolishedStructuresByConstructedYear/{year}
 Method	- GET
 Params	- year : Year for the demolished structures to be returned
+Header	- Authorization : <JWT>
 This API returns all the demolished structures in a given year
 */
 func GetAllDemolishedStructuresByYear(writer http.ResponseWriter, request *http.Request) {
