@@ -1,0 +1,10 @@
+FEAT_CODE, FEAT_TYPE
+2100,Building
+5100,Building Under Construction
+5110,Garage
+2110,Skybridge
+1001,Gas Station Canopy
+1002,Storage Tank
+1003,Placeholder
+1004,Auxiliary Structure
+1005,Temporary Structure

@@ -104,17 +104,64 @@ func main() {
 				}
 
 				bin, err := strconv.ParseInt(record[1], 10, 64)
+				if err != nil {
+					fmt.Println("Error in parsing value", err)
+				}
+
 				boroughCode, err := strconv.Atoi(record[1][0:1])
+				if err != nil {
+					fmt.Println("Error in parsing value", err)
+				}
+
 				buildingCode, err := strconv.Atoi(record[1][1:])
+				if err != nil {
+					fmt.Println("Error in parsing value", err)
+				}
+
 				year, err := strconv.ParseInt(record[2], 10, 64)
+				if err != nil {
+					fmt.Println("Error in parsing value", err)
+				}
+
 				doittId, err := strconv.ParseInt(record[6], 10, 64)
+				if err != nil {
+					fmt.Println("Error in parsing value", err)
+				}
+
 				heightRoof, err := strconv.ParseFloat(record[7], 64)
+				if err != nil {
+					fmt.Println("Error in parsing value", err)
+				}
+
 				featCode, err := strconv.ParseInt(record[8], 10, 64)
+				if err != nil {
+					fmt.Println("Error in parsing value", err)
+				}
+
 				groundLevel, err := strconv.ParseInt(record[9], 10, 64)
+				if err != nil {
+					fmt.Println("Error in parsing value", err)
+				}
+
 				shapeArea, err := strconv.ParseFloat(record[10], 64)
+				if err != nil {
+					fmt.Println("Error in parsing value", err)
+				}
+
 				shapeLength, err := strconv.ParseFloat(record[11], 64)
+				if err != nil {
+					fmt.Println("Error in parsing value", err)
+				}
+
 				baseBBL, err := strconv.Atoi(record[12])
+				if err != nil {
+					fmt.Println("Error in parsing value", err)
+				}
+
 				mplutoBBL, err := strconv.Atoi(record[13])
+				if err != nil {
+					fmt.Println("Error in parsing value", err)
+				}
 
 				document := &Building{
 					ID:           bson.NewObjectId(),
