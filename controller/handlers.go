@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gorilla/mux"
 	"gopkg.in/mgo.v2/bson"
 	"log"
@@ -235,6 +236,8 @@ func AddBuildingFootPrints(writer http.ResponseWriter, request *http.Request) {
 	var err error
 	var msg ResponseMessage
 	defer request.Body.Close()
+	var boroughCode int
+	var buildingCode int
 
 	valid, js = IsTokenValid(request)
 	if valid {
@@ -246,6 +249,18 @@ func AddBuildingFootPrints(writer http.ResponseWriter, request *http.Request) {
 		} else {
 			bld.ID = bson.NewObjectId()
 			bld.LastModified = time.Now()
+
+			boroughCode, err = strconv.Atoi(strconv.Itoa(int(bld.Bin))[0:1])
+			if err != nil {
+				fmt.Println("Error in parsing value", err)
+			}
+
+			buildingCode, err = strconv.Atoi(strconv.Itoa(int(bld.Bin))[1:])
+			if err != nil {
+				fmt.Println("Error in parsing value", err)
+			}
+			bld.BoroughCode = boroughCode
+			bld.BuildingCode = buildingCode
 			if err = bld.CreateBuildingFootPrint(db.MgoSession, bld); err != nil {
 				Logger.Println("Error adding building footprint data...", err)
 				msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error Creating FootPrint Data"}
