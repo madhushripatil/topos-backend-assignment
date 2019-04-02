@@ -64,16 +64,19 @@ Create a username and password to connect to MongoDB and enable auth while start
 
 ## Deployment
 
-Set an environment variable 'BUILDING_ENV' to your environment file name.
+Set an environment variable 'BUILDING_ENV' to your application configuration file name.
 
-Download the [Project zip](https://github.com/madhushripatil/topos-backend-assignment/archive/master.zip) to your $GOPATH src directory.
+Download the [Project zip](https://github.com/madhushripatil/topos-backend-assignment/archive/master.zip) to your $GOPATH/src directory.
 
-Run the following commands:
+Run the following commands inside the $GOPATH/src/project directory:
 go build
-go install
 go run server.go
 
-You may use Curl or Postman REST client to run the APIs provided
+### REST API Documentation
+
+Refer to the [REST API Documentation](https://documenter.getpostman.com/view/2410794/S1EH21eE)
+
+You may use Curl or Postman REST client to run the APIs provided.
 
 Set your Database and REST Endpoint parameters in the [development.env](https://github.com/madhushripatil/topos-backend-assignment/blob/master/development.env) file provided.
 
