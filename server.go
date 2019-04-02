@@ -41,7 +41,6 @@ func main() {
 	// Load env file
 	Logger.Println("Loading the configuration file...")
 	envFile := fmt.Sprintf("%s.env", os.Getenv("BUILDING_ENV"))
-	//envFile := "development.env"
 	e := godotenv.Load(envFile)
 
 	if e != nil {

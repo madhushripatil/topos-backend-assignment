@@ -27,6 +27,59 @@ func SetJWTSecret(jkey []byte) {
 	JwtSecretKey = jkey
 }
 
+func IsTokenValid(request *http.Request) (bool, []byte) {
+	var err error
+	var valid bool
+	valid = false
+	var js []byte
+	var msg ResponseMessage
+	var tkn *jwt.Token
+
+	h := request.Header
+	tknStr := h.Get("Authorization")
+
+	if tknStr == "" {
+		Logger.Println("Bad Request. Please provide token in the Authorization Header")
+		msg = ResponseMessage{Status: http.StatusBadRequest, ErrorMsg: "No Token provided", Message: "Bad Request. Please provide token in the Authorization Header"}
+		js, err = json.Marshal(msg)
+	} else {
+		// Initialize a new instance of `Claims`
+		claims := &Claims{}
+
+		// Parse the JWT string and store the result in `claims`.
+		// Note that we are passing the key in this method as well. This method will return an error
+		// if the token is invalid (if it has expired according to the expiry time we set on sign in),
+		// or if the signature does not match
+		tkn, err = jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
+			return JwtSecretKey, nil
+		})
+		if tkn == nil {
+			Logger.Println("Invalid Token Provided")
+			msg = ResponseMessage{Status: http.StatusUnauthorized, ErrorMsg: "Invalid Token Provided", Message: "Invalid Token Provided"}
+			js, err = json.Marshal(msg)
+		} else {
+			if !tkn.Valid {
+				Logger.Println("Unauthorized User")
+				msg = ResponseMessage{Status: http.StatusUnauthorized, ErrorMsg: err.Error(), Message: "Unauthorized User"}
+				js, err = json.Marshal(msg)
+			} else if err != nil {
+				if err == jwt.ErrSignatureInvalid {
+					Logger.Println("Unauthorized User")
+					msg = ResponseMessage{Status: http.StatusUnauthorized, ErrorMsg: err.Error(), Message: "Unauthorized User"}
+					js, err = json.Marshal(msg)
+				} else {
+					Logger.Println("Bad Request")
+					msg = ResponseMessage{Status: http.StatusBadRequest, ErrorMsg: err.Error(), Message: "Bad Request"}
+					js, err = json.Marshal(msg)
+				}
+			} else {
+				valid = true
+			}
+		}
+	}
+	return valid, js
+}
+
 /**
 API URL - http://<host>:<port>/buildingFootprints/signup
 Method	- POST
@@ -62,7 +115,7 @@ func SignUp(writer http.ResponseWriter, request *http.Request) {
 			creds.ID = bson.NewObjectId()
 			creds.Password = string(hashedPassword)
 			if err = creds.CreateUser(db.MgoSession, creds); err != nil {
-				Logger.Println("Error creating user...", err)
+				Logger.Println("Error creating user", err)
 				msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error Creating User"}
 				js, err = json.Marshal(msg)
 			} else {
@@ -83,7 +136,7 @@ func generateToken(u string) (string, time.Time, error) {
 	var expirationTime time.Time
 
 	// Declare the expiration time of the token
-	// here, we have kept it as 5 minutes
+	// here, we have kept it as 60 minutes
 	expirationTime = time.Now().Add(60 * time.Minute)
 
 	// Create the JWT claims, which includes the username and expiry time
@@ -137,13 +190,13 @@ func LoginUser(writer http.ResponseWriter, request *http.Request) {
 				if err = bcrypt.CompareHashAndPassword([]byte(storedPass), []byte(user.Password)); err != nil {
 					// If the two passwords don't match, return a 401 status
 					Logger.Println("Unauthorized User")
-					msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Unauthorized User"}
+					msg = ResponseMessage{Status: http.StatusUnauthorized, ErrorMsg: err.Error(), Message: "Unauthorized User"}
 					js, err = json.Marshal(msg)
 				} else {
 					// Valid User, generate and set token
 					tok, expTime, err = generateToken(user.Username)
-					tokenMsg := TokenMessage{Token: tok, TokenExpiry: expTime.String()}
-					js, err = json.Marshal(tokenMsg)
+					msg := TokenMessage{Token: tok, TokenExpiry: expTime.String()}
+					js, err = json.Marshal(msg)
 				}
 			} else {
 				Logger.Println("Unauthorized User")

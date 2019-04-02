@@ -82,7 +82,7 @@ func (building *Building) CreateBuildingFootPrint(session *mgo.Session, b Buildi
 Helper method to delete a specific document
 */
 func (building *Building) DeleteBuildingFootPrint(session *mgo.Session, b Building) error {
-	err := getBuildingCollection(session).Remove(&b)
+	err := getBuildingCollection(session).RemoveId(b.ID)
 	return err
 }
 

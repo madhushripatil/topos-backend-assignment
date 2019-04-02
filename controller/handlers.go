@@ -13,6 +13,8 @@ import (
 )
 
 var Logger *log.Logger
+var js []byte
+var valid bool
 
 type ResponseMessage struct {
 	Status   int    `json:"status"`
@@ -30,22 +32,24 @@ Method	- GET
 Params	- None
 This API returns the count of all the BuildingFootPrint Data in the Database
 */
-func AllBuildingsCount(writer http.ResponseWriter, req *http.Request) {
-	var bld models.Building
-	var js []byte
+func AllBuildingsCount(writer http.ResponseWriter, request *http.Request) {
 	var err error
+	var bld models.Building
 	var msg ResponseMessage
 	var cnt int
 
-	err, cnt = bld.GetAllBuildingsCount(db.MgoSession)
-
-	if err != nil {
-		Logger.Println("Error getting building count ", err)
-		msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error getting Building count"}
-		js, err = json.Marshal(msg)
-	} else {
-		msg = ResponseMessage{Status: http.StatusOK, ErrorMsg: "", Message: "Total Building Footprints " + strconv.Itoa(cnt)}
-		js, err = json.Marshal(msg)
+	valid, js = IsTokenValid(request)
+	if valid {
+		// token is valid and no other error, proceed
+		err, cnt = bld.GetAllBuildingsCount(db.MgoSession)
+		if err != nil {
+			Logger.Println("Error getting building count ", err)
+			msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error getting Building count"}
+			js, err = json.Marshal(msg)
+		} else {
+			msg = ResponseMessage{Status: http.StatusOK, ErrorMsg: "", Message: "Total Building Footprints " + strconv.Itoa(cnt)}
+			js, err = json.Marshal(msg)
+		}
 	}
 	writer.Header().Set("Content-Type", "application/json")
 	writer.Write(js)
@@ -59,24 +63,26 @@ This API returns all the BuildingFootPrint Data from the Database
 */
 func AllBuildingFootPrints(writer http.ResponseWriter, request *http.Request) {
 	var bld models.Building
-	var js []byte
 	var err error
 	var buildings []models.Building
 	var msg ResponseMessage
 
-	buildings, err = bld.GetAllBuildingFootPrints(db.MgoSession)
-
-	if err != nil {
-		Logger.Println("Error getting all building footprints...", err)
-		msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error getting FootPrint Data"}
-		js, err = json.Marshal(msg)
-	} else {
-		if len(buildings) != 0 {
-			js, err = json.Marshal(buildings)
-		} else {
-			Logger.Println("No data found")
-			msg = ResponseMessage{Status: http.StatusNoContent, ErrorMsg: "", Message: "Empty Dataset"}
+	valid, js = IsTokenValid(request)
+	if valid {
+		// token is valid and no other error, proceed
+		buildings, err = bld.GetAllBuildingFootPrints(db.MgoSession)
+		if err != nil {
+			Logger.Println("Error getting all building footprints...", err)
+			msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error getting FootPrint Data"}
 			js, err = json.Marshal(msg)
+		} else {
+			if len(buildings) != 0 {
+				js, err = json.Marshal(buildings)
+			} else {
+				Logger.Println("No data found")
+				msg = ResponseMessage{Status: http.StatusNoContent, ErrorMsg: "", Message: "Empty Dataset"}
+				js, err = json.Marshal(msg)
+			}
 		}
 	}
 	writer.Header().Set("Content-Type", "application/json")
@@ -96,18 +102,22 @@ func GetBuildingFootPrintsById(writer http.ResponseWriter, request *http.Request
 	var err error
 	var msg ResponseMessage
 
-	bld, err = bld.FindBuildingFootPrintById(db.MgoSession, params["id"])
-	if err != nil {
-		Logger.Println("Error getting building footprint by ID...", err)
-		msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error getting FootPrint Data"}
-		js, err = json.Marshal(msg)
-	} else {
-		if (models.Building{}) != bld {
-			js, err = json.Marshal(bld)
-		} else {
-			Logger.Println("No data found")
-			msg = ResponseMessage{Status: http.StatusNoContent, ErrorMsg: "", Message: "Empty Dataset"}
+	valid, js = IsTokenValid(request)
+	if valid {
+		// token is valid and no other error, proceed
+		bld, err = bld.FindBuildingFootPrintById(db.MgoSession, params["id"])
+		if err != nil {
+			Logger.Println("Error getting building footprint by ID...", err)
+			msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error getting Building FootPrint Data"}
 			js, err = json.Marshal(msg)
+		} else {
+			if (models.Building{}) != bld {
+				js, err = json.Marshal(bld)
+			} else {
+				Logger.Println("No data found")
+				msg = ResponseMessage{Status: http.StatusNoContent, ErrorMsg: "", Message: "Empty Dataset"}
+				js, err = json.Marshal(msg)
+			}
 		}
 	}
 	writer.Header().Set("Content-Type", "application/json")
@@ -127,24 +137,28 @@ func DeleteBuildingFootPrints(writer http.ResponseWriter, request *http.Request)
 	var err error
 	var msg ResponseMessage
 
-	bld, err = bld.FindBuildingFootPrintById(db.MgoSession, params["id"])
-	if err != nil {
-		Logger.Println("Error deleting building footprint data...", err)
-		msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error Deleting FootPrint Data"}
-		js, err = json.Marshal(msg)
-	} else {
-		if (models.Building{}) != bld {
-			if err = bld.DeleteBuildingFootPrint(db.MgoSession, bld); err != nil {
-				Logger.Println("Error deleting building footprint data...", err)
-				msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error Deleting FootPrint Data"}
-				js, err = json.Marshal(msg)
+	valid, js = IsTokenValid(request)
+	if valid {
+		// token is valid and no other error, proceed
+		bld, err = bld.FindBuildingFootPrintById(db.MgoSession, params["id"])
+		if err != nil {
+			Logger.Println("Error deleting building footprint data...", err)
+			msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error Deleting FootPrint Data"}
+			js, err = json.Marshal(msg)
+		} else {
+			if (models.Building{}) != bld {
+				if err = bld.DeleteBuildingFootPrint(db.MgoSession, bld); err != nil {
+					Logger.Println("Error deleting building footprint data...", err)
+					msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error Deleting FootPrint Data"}
+					js, err = json.Marshal(msg)
+				} else {
+					msg = ResponseMessage{Status: http.StatusOK, ErrorMsg: "None", Message: "BuildingFootPrint successfully deleted!"}
+					js, err = json.Marshal(msg)
+				}
 			} else {
-				msg = ResponseMessage{Status: http.StatusOK, ErrorMsg: "None", Message: "BuildingFootPrint successfully deleted!"}
+				msg = ResponseMessage{Status: http.StatusNoContent, ErrorMsg: "", Message: "No Such BuildingFootPrint"}
 				js, err = json.Marshal(msg)
 			}
-		} else {
-			msg = ResponseMessage{Status: http.StatusNoContent, ErrorMsg: "", Message: "No Such BuildingFootPrint"}
-			js, err = json.Marshal(msg)
 		}
 	}
 	writer.Header().Set("Content-Type", "application/json")
@@ -167,31 +181,35 @@ func UpdateBuildingFootPrints(writer http.ResponseWriter, request *http.Request)
 	var err error
 	var msg ResponseMessage
 
-	bld, err = bld.FindBuildingFootPrintById(db.MgoSession, params["id"])
-	if err != nil {
-		Logger.Println("Error updating building footprint data...", err)
-		msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error Updating FootPrint Data"}
-		js, err = json.Marshal(msg)
-	} else {
-		if (models.Building{}) != bld {
+	valid, js = IsTokenValid(request)
+	if valid {
+		// token is valid and no other error, proceed
+		bld, err = bld.FindBuildingFootPrintById(db.MgoSession, params["id"])
+		if err != nil {
+			Logger.Println("Error updating building footprint data...", err)
+			msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error Updating FootPrint Data"}
+			js, err = json.Marshal(msg)
+		} else {
+			if (models.Building{}) != bld {
 
-			if err = json.NewDecoder(request.Body).Decode(&bldUpdate); err != nil {
-				Logger.Println("Error parsing request...", err)
-				msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error parsing request"}
-				js, err = json.Marshal(msg)
-			} else {
-				if err = bld.UpdateBuildingFootPrint(db.MgoSession, bld, bldUpdate); err != nil {
-					Logger.Println("Error updating building footprint data...", err)
-					msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error Updating FootPrint Data"}
+				if err = json.NewDecoder(request.Body).Decode(&bldUpdate); err != nil {
+					Logger.Println("Error parsing request...", err)
+					msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error parsing request"}
 					js, err = json.Marshal(msg)
 				} else {
-					msg = ResponseMessage{Status: http.StatusOK, ErrorMsg: "None", Message: "BuildingFootPrint successfully updated!"}
-					js, err = json.Marshal(msg)
+					if err = bld.UpdateBuildingFootPrint(db.MgoSession, bld, bldUpdate); err != nil {
+						Logger.Println("Error updating building footprint data...", err)
+						msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error Updating FootPrint Data"}
+						js, err = json.Marshal(msg)
+					} else {
+						msg = ResponseMessage{Status: http.StatusOK, ErrorMsg: "None", Message: "BuildingFootPrint successfully updated!"}
+						js, err = json.Marshal(msg)
+					}
 				}
+			} else {
+				msg = ResponseMessage{Status: http.StatusNoContent, ErrorMsg: "", Message: "No Such BuildingFootPrint"}
+				js, err = json.Marshal(msg)
 			}
-		} else {
-			msg = ResponseMessage{Status: http.StatusNoContent, ErrorMsg: "", Message: "No Such BuildingFootPrint"}
-			js, err = json.Marshal(msg)
 		}
 	}
 	writer.Header().Set("Content-Type", "application/json")
@@ -212,20 +230,24 @@ func AddBuildingFootPrints(writer http.ResponseWriter, request *http.Request) {
 	var msg ResponseMessage
 	defer request.Body.Close()
 
-	if err = json.NewDecoder(request.Body).Decode(&bld); err != nil {
-		Logger.Println("Error adding building footprint data...", err)
-		msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error Creating FootPrint Data"}
-		js, err = json.Marshal(msg)
-	} else {
-		bld.ID = bson.NewObjectId()
-		bld.LastModified = time.Now()
-		if err = bld.CreateBuildingFootPrint(db.MgoSession, bld); err != nil {
+	valid, js = IsTokenValid(request)
+	if valid {
+		// token is valid and no other error, proceed
+		if err = json.NewDecoder(request.Body).Decode(&bld); err != nil {
 			Logger.Println("Error adding building footprint data...", err)
 			msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error Creating FootPrint Data"}
 			js, err = json.Marshal(msg)
 		} else {
-			msg = ResponseMessage{Status: http.StatusCreated, ErrorMsg: "None", Message: "BuildingFootPrint successfully created!"}
-			js, err = json.Marshal(msg)
+			bld.ID = bson.NewObjectId()
+			bld.LastModified = time.Now()
+			if err = bld.CreateBuildingFootPrint(db.MgoSession, bld); err != nil {
+				Logger.Println("Error adding building footprint data...", err)
+				msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error Creating FootPrint Data"}
+				js, err = json.Marshal(msg)
+			} else {
+				msg = ResponseMessage{Status: http.StatusCreated, ErrorMsg: "None", Message: "BuildingFootPrint successfully created!"}
+				js, err = json.Marshal(msg)
+			}
 		}
 	}
 	writer.Header().Set("Content-Type", "application/json")
@@ -247,18 +269,22 @@ func GetBuildingsByType(writer http.ResponseWriter, request *http.Request) {
 	var msg ResponseMessage
 	var bldngType int
 
-	bldngType, err = strconv.Atoi(params["bldType"])
-	buildings, err = bld.FindAllBuildingsByType(db.MgoSession, bldngType)
-	if err != nil {
-		Logger.Println("Error getting buildings by type...", err)
-		msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error getting Buildings by type"}
-		js, err = json.Marshal(msg)
-	} else {
-		if len(buildings) != 0 {
-			js, err = json.Marshal(buildings)
-		} else {
-			msg = ResponseMessage{Status: http.StatusNoContent, ErrorMsg: "", Message: "Empty Dataset"}
+	valid, js = IsTokenValid(request)
+	if valid {
+		// token is valid and no other error, proceed
+		bldngType, err = strconv.Atoi(params["bldType"])
+		buildings, err = bld.FindAllBuildingsByType(db.MgoSession, bldngType)
+		if err != nil {
+			Logger.Println("Error getting buildings by type...", err)
+			msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error getting Buildings by type"}
 			js, err = json.Marshal(msg)
+		} else {
+			if len(buildings) != 0 {
+				js, err = json.Marshal(buildings)
+			} else {
+				msg = ResponseMessage{Status: http.StatusNoContent, ErrorMsg: "", Message: "Empty Dataset"}
+				js, err = json.Marshal(msg)
+			}
 		}
 	}
 	writer.Header().Set("Content-Type", "application/json")
@@ -282,19 +308,23 @@ func GetTallAndWideBuildings(writer http.ResponseWriter, request *http.Request) 
 	var height float64
 	var area float64
 
-	height, err = strconv.ParseFloat(params["minHeight"], 32)
-	area, err = strconv.ParseFloat(params["minArea"], 32)
-	buildings, err = bld.FindAllBuildingsTallerAndWider(db.MgoSession, height, area)
-	if err != nil {
-		Logger.Println("Error getting taller and wider buildings...", err)
-		msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error getting taller and wider buildings"}
-		js, err = json.Marshal(msg)
-	} else {
-		if len(buildings) != 0 {
-			js, err = json.Marshal(buildings)
-		} else {
-			msg = ResponseMessage{Status: http.StatusNoContent, ErrorMsg: "", Message: "No such data present"}
+	valid, js = IsTokenValid(request)
+	if valid {
+		// token is valid and no other error, proceed
+		height, err = strconv.ParseFloat(params["minHeight"], 32)
+		area, err = strconv.ParseFloat(params["minArea"], 32)
+		buildings, err = bld.FindAllBuildingsTallerAndWider(db.MgoSession, height, area)
+		if err != nil {
+			Logger.Println("Error getting taller and wider buildings...", err)
+			msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error getting taller and wider buildings"}
 			js, err = json.Marshal(msg)
+		} else {
+			if len(buildings) != 0 {
+				js, err = json.Marshal(buildings)
+			} else {
+				msg = ResponseMessage{Status: http.StatusNoContent, ErrorMsg: "", Message: "No such data present"}
+				js, err = json.Marshal(msg)
+			}
 		}
 	}
 	writer.Header().Set("Content-Type", "application/json")
@@ -316,18 +346,22 @@ func GetAllDemolishedStructuresByYear(writer http.ResponseWriter, request *http.
 	var msg ResponseMessage
 	var y int
 
-	y, err = strconv.Atoi(params["year"])
-	buildings, err = bld.FindAllDemolishedStructruesByYear(db.MgoSession, y)
-	if err != nil {
-		Logger.Println("Error getting demolished structures...", err)
-		msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error getting demolished structures"}
-		js, err = json.Marshal(msg)
-	} else {
-		if len(buildings) != 0 {
-			js, err = json.Marshal(buildings)
-		} else {
-			msg = ResponseMessage{Status: http.StatusNoContent, ErrorMsg: "", Message: "No such data present"}
+	valid, js = IsTokenValid(request)
+	if valid {
+		// token is valid and no other error, proceed
+		y, err = strconv.Atoi(params["year"])
+		buildings, err = bld.FindAllDemolishedStructruesByYear(db.MgoSession, y)
+		if err != nil {
+			Logger.Println("Error getting demolished structures...", err)
+			msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error getting demolished structures"}
 			js, err = json.Marshal(msg)
+		} else {
+			if len(buildings) != 0 {
+				js, err = json.Marshal(buildings)
+			} else {
+				msg = ResponseMessage{Status: http.StatusNoContent, ErrorMsg: "", Message: "No such data present"}
+				js, err = json.Marshal(msg)
+			}
 		}
 	}
 	writer.Header().Set("Content-Type", "application/json")
