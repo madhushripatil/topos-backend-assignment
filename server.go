@@ -13,6 +13,7 @@ import (
 
 var DbName string
 var BuildingCollectionName string
+var DemolishedCollectionName string
 var ServerPort string
 var DBHost string
 var DBUsername string
@@ -54,6 +55,7 @@ func main() {
 		// Connect to the database and start services
 		DbName = os.Getenv("db_name")
 		BuildingCollectionName = os.Getenv("bldng_collection_name")
+		DemolishedCollectionName = os.Getenv("demolished_collection_name")
 		DBHost = os.Getenv("db_host")
 		ServerPort = os.Getenv("server_port")
 		DBTimeout = os.Getenv("db_timeout")
@@ -78,9 +80,11 @@ func main() {
 		route.HandleFunc("/authenticate/login", controller.LoginUser).Methods("POST")
 		route.HandleFunc("/authenticate/signup", controller.SignUp).Methods("POST")
 
+		route.HandleFunc("/transform/archiveDemolishedStructures", controller.ArchiveAllDemolishedStructures).Methods("POST")
+
 		// The following function call makes a database connection
 		db.ConnectToDatabase(DbName, DBHost, DBUsername, DBPassword, DBTimeout)
-		db.SetDbProperties(BuildingCollectionName, DbName, UserLoginCollectionName)
+		db.SetDbProperties(DbName, BuildingCollectionName, DemolishedCollectionName, UserLoginCollectionName)
 		controller.UseLogger(Logger)
 		controller.SetJWTSecret(JwtKey)
 

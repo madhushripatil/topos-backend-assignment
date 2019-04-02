@@ -350,7 +350,7 @@ func GetAllDemolishedStructuresByYear(writer http.ResponseWriter, request *http.
 	if valid {
 		// token is valid and no other error, proceed
 		y, err = strconv.Atoi(params["year"])
-		buildings, err = bld.FindAllDemolishedStructruesByYear(db.MgoSession, y)
+		buildings, err = bld.FindAllDemolishedStructuresByYear(db.MgoSession, y)
 		if err != nil {
 			Logger.Println("Error getting demolished structures...", err)
 			msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error getting demolished structures"}

@@ -138,10 +138,19 @@ func (building *Building) FindAllBuildingsTallerAndWider(session *mgo.Session, h
 /**
 Helper method to find all demolished structures constructed in a given year
 */
-func (building *Building) FindAllDemolishedStructruesByYear(session *mgo.Session, y int) ([]Building, error) {
+func (building *Building) FindAllDemolishedStructuresByYear(session *mgo.Session, y int) ([]Building, error) {
 	var buildings []Building
 	err := getBuildingCollection(session).Find(bson.M{"$and": []bson.M{bson.M{"year": y},
 		bson.M{"lastStatus": "Demolition"}}}).All(&buildings)
+	return buildings, err
+}
+
+/**
+Helper method to find all demolished structures in the dataset
+*/
+func (building *Building) FindAllDemolishedStructures(session *mgo.Session) ([]Building, error) {
+	var buildings []Building
+	err := getBuildingCollection(session).Find(bson.M{"lastStatus": "Demolition"}).All(&buildings)
 	return buildings, err
 }
 

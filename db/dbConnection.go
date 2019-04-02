@@ -13,14 +13,17 @@ var MgoSession *mgo.Session
 var BuildingCollection string
 var DatabaseName string
 var UserLoginCollection string
+var DemolishedCollection string
+var logger *log.Logger
 
 /**
 Helper method to set DB properties
 */
-func SetDbProperties(cc string, d string, uc string) {
-	BuildingCollection = cc
-	DatabaseName = d
-	UserLoginCollection = uc
+func SetDbProperties(dbName string, bldngColl string, demolishedColl string, userColl string) {
+	DatabaseName = dbName
+	BuildingCollection = bldngColl
+	DemolishedCollection = demolishedColl
+	UserLoginCollection = userColl
 }
 
 func ConnectToDatabase(dbName string, dbHost string, dbUser string, dbPass string, dbTimeout string) {
@@ -32,7 +35,7 @@ func ConnectToDatabase(dbName string, dbHost string, dbUser string, dbPass strin
 	}
 	defer f.Close()
 
-	logger := log.New(f, "prefix", log.LstdFlags)
+	logger = log.New(f, "prefix", log.LstdFlags)
 	logger.Println("Starting mongodb session")
 
 	timeout, err := strconv.Atoi(dbTimeout)
