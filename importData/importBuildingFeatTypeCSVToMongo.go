@@ -22,7 +22,8 @@ type BuildingFeatType struct {
 func main() {
 
 	log.Println("Loading the configuration file...")
-	e := godotenv.Load("development.env")
+	envFile := fmt.Sprintf("%s.env", os.Getenv("BUILDING_ENV"))
+	e := godotenv.Load(envFile)
 
 	if e != nil {
 		// close the application if the configuration file open fails
