@@ -78,6 +78,7 @@ func main() {
 		route.HandleFunc("/buildingFootprints", controller.AllBuildingFootPrints).Methods("GET")
 		route.HandleFunc("/buildingFootprints/{id}", controller.GetBuildingFootPrintsById).Methods("GET")
 		route.HandleFunc("/buildingFootprints/type/{bldType}", controller.GetBuildingsByType).Methods("GET")
+		route.HandleFunc("/buildingFootprints/borough/{boroughName}", controller.GetBuildingsByBorough).Methods("GET")
 		route.HandleFunc("/buildingFootprints/buildingHeightAndArea/{minHeight}/{minArea}", controller.GetTallAndWideBuildings).Methods("GET")
 		route.HandleFunc("/buildingFootprints/demolishedStructuresByConstructedYear/{year}", controller.GetAllDemolishedStructuresByYear).Methods("GET")
 
