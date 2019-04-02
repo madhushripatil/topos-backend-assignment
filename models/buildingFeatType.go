@@ -8,7 +8,7 @@ import (
 
 type BuildingFeatType struct {
 	ID       bson.ObjectId `bson:"_id" json:"id"`
-	FeatCode int16         `bson:"featCode" json:"featCode"`
+	FeatCode int64         `bson:"featCode" json:"featCode"`
 	FeatType string        `bson:"featType" json:"featType"`
 }
 
