@@ -10,16 +10,19 @@ import (
 )
 
 type Building struct {
-	ID           bson.ObjectId `bson:"_id" json:"bin"`
-	DoittID      int32         `bson:"doittID" json:"doittID"`
+	ID           bson.ObjectId `bson:"_id" json:"id"`
+	Bin          int64         `bson:"bin" json:"bin"`
+	BoroughCode  int           `bson:"boroughCode" json:"boroughCode"`
+	BuildingCode int           `bson:"buildingCode" json:"buildingCode"`
+	DoittID      int64         `bson:"doittID" json:"doittID"`
 	Name         string        `bson:"name" json:"name"`
-	Year         int16         `bson:"year" json:"year"`
+	Year         int64         `bson:"year" json:"year"`
 	LastStatus   string        `bson:"lastStatus" json:"lastStatus"`
-	FeatCode     int16         `bson:"featCode" json:"featCode"`
-	HeightRoof   float32       `bson:"heightRoof" json:"heightRoof"`
-	GroundLevel  int16         `bson:"groundLevel" json:"groundLevel"`
-	ShapeArea    float32       `bson:"shapeArea" json:"shapeArea"`
-	ShapeLength  float32       `bson:"shapeLength" json:"shapeLength"`
+	FeatCode     int64         `bson:"featCode" json:"featCode"`
+	HeightRoof   float64       `bson:"heightRoof" json:"heightRoof"`
+	GroundLevel  int64         `bson:"groundLevel" json:"groundLevel"`
+	ShapeArea    float64       `bson:"shapeArea" json:"shapeArea"`
+	ShapeLength  float64       `bson:"shapeLength" json:"shapeLength"`
 	LastModified time.Time     `bson:"lastModified" json:"lastModified"`
 	GeomSource   string        `bson:"geomSource" json:"geomSource"`
 	BaseBBL      int           `bson:"baseBBL" json:"baseBBL"`
@@ -172,7 +175,7 @@ func isEmpty(k reflect.Kind, e reflect.Value) bool {
 			empty = true
 		}
 
-	case reflect.Int16, reflect.Int32, reflect.Int:
+	case reflect.Int16, reflect.Int32, reflect.Int64, reflect.Int:
 		if e.Int() == 0 {
 			empty = true
 		}
