@@ -44,6 +44,8 @@ MongoDB offers both an Enterprise and Community version of its powerful non-rela
 
 https://www.mongodb.com/download-center/community
 
+Create a username and password to connect to MongoDB and enable auth while starting mongodb service.
+
 #### Gorilla Mux Package for routing
 
 [Gorilla Mux](https://github.com/gorilla/mux) - go get github.com/gorilla/mux
@@ -62,9 +64,18 @@ https://www.mongodb.com/download-center/community
 
 ## Deployment
 
-Set your Database and REST Endpoint parameters in the [buildingFootprint.env](https://github.com/madhushripatil/topos-backend-assignment/blob/master/buildingFootprint.env) file provided.
+Set an environment variable 'BUILDING_ENV' to your environment file name.
 
+Download the [Project zip](https://github.com/madhushripatil/topos-backend-assignment/archive/master.zip) to your $GOPATH src directory.
 
+Run the following commands:
+go build
+go install
+go run server.go
+
+You may use Curl or Postman REST client to run the APIs provided
+
+Set your Database and REST Endpoint parameters in the [development.env](https://github.com/madhushripatil/topos-backend-assignment/blob/master/development.env) file provided.
 
 
 ## Built With
@@ -73,6 +84,4 @@ Set your Database and REST Endpoint parameters in the [buildingFootprint.env](ht
 * [Mongo DB](https://www.mongodb.com/what-is-mongodb) - Document Database with scalability and flexibility
 * [GoLand IDE](https://www.jetbrains.com/go/?utm_expid=.qV9Irwa4SS-xPJHMhpNehw.0&utm_referrer=) A clever IDE to GO
 
-## Authors
-
-* **Madhushri Patil**
+## Future Scope
