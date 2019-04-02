@@ -227,7 +227,7 @@ Method	- POST
 Params	- None
 Header	- Authorization : <JWT>
 Request Body - JSON Object containing all the fields
-This API deletes the BuildingFootPrint Data for a specific ID
+This API creates a new BuildingFootPrint
 */
 func AddBuildingFootPrints(writer http.ResponseWriter, request *http.Request) {
 	var bld models.Building
@@ -301,6 +301,46 @@ func GetBuildingsByType(writer http.ResponseWriter, request *http.Request) {
 }
 
 /**
+API URL - http://<host>:<port>/buildingFootprints/borough/{boroughName}
+Method	- GET
+Params	- boroughName : Borough Name (example - Manhattan, The Bronx, etc.)
+Header	- Authorization : <JWT>
+This API returns all the Buildings within a Borough
+*/
+func GetBuildingsByBorough(writer http.ResponseWriter, request *http.Request) {
+	var bld models.Building
+	params := mux.Vars(request)
+	var js []byte
+	var err error
+	var buildings []models.Building
+	var msg ResponseMessage
+	var borough string
+	var boroughCode int
+
+	valid, js = IsTokenValid(request)
+	if valid {
+		// token is valid and no other error, proceed
+		borough = params["boroughName"]
+		boroughCode, err = models.GetBoroughCodeByName(db.MgoSession, borough)
+		buildings, err = bld.FindAllBuildingsByBoroughName(db.MgoSession, boroughCode)
+		if err != nil {
+			Logger.Println("Error getting buildings withing a Borough", err)
+			msg = ResponseMessage{Status: http.StatusInternalServerError, ErrorMsg: err.Error(), Message: "Error getting buildings withing a Borough"}
+			js, err = json.Marshal(msg)
+		} else {
+			if len(buildings) != 0 {
+				js, err = json.Marshal(buildings)
+			} else {
+				msg = ResponseMessage{Status: http.StatusNoContent, ErrorMsg: "", Message: "Empty Dataset"}
+				js, err = json.Marshal(msg)
+			}
+		}
+	}
+	writer.Header().Set("Content-Type", "application/json")
+	writer.Write(js)
+}
+
+/**
 API URL - http://<host>:<port>/buildingFootprints/buildingHeightAndArea/{minHeight}/{minArea}
 Method	- GET
 Params	- minHeight : the height with reference to which taller buildings are to be returned
@@ -346,7 +386,7 @@ API URL - http://<host>:<port>/buildingFootprints/demolishedStructuresByConstruc
 Method	- GET
 Params	- year : Year for the demolished structures to be returned
 Header	- Authorization : <JWT>
-This API returns all the demolished structures in a given year
+This API returns all the demolished structures constructed in a given year
 */
 func GetAllDemolishedStructuresByYear(writer http.ResponseWriter, request *http.Request) {
 	var bld models.Building

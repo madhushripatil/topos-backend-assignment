@@ -129,6 +129,15 @@ func (building *Building) FindAllBuildingsByType(session *mgo.Session, bldType i
 }
 
 /**
+Helper method to find all Buildings by BoroughName
+*/
+func (building *Building) FindAllBuildingsByBoroughName(session *mgo.Session, boroughCode int) ([]Building, error) {
+	var buildings []Building
+	err := getBuildingCollection(session).Find(bson.M{"boroughCode": boroughCode}).All(&buildings)
+	return buildings, err
+}
+
+/**
 Helper method to find all Buildings taller than minimum and larger than minimum area given
 */
 func (building *Building) FindAllBuildingsTallerAndWider(session *mgo.Session, h float64, a float64) ([]Building, error) {
