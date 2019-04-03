@@ -1,7 +1,8 @@
 # Building Footprint Data collector and Analyzer
 
-This is a simple REST endpoint that allows users to collect and analyze Building footprints dataset. The REST endpoint supports basic APIs like inserting, updating, deleting and querying Building footprints data.
+This is a simple ETL process that allows users to collect and analyze Building footprints dataset. It is a REST endpoint supporting basic APIs like inserting, updating, deleting and querying Building footprints data.
 
+Transformations like Splitting, Joining and Cleaning are performed on the provided dataset.
 
 ## Getting Started
 
@@ -131,3 +132,5 @@ Set your Database and REST Endpoint parameters in the [development.env](https://
 * [GoLand IDE](https://www.jetbrains.com/go/?utm_expid=.qV9Irwa4SS-xPJHMhpNehw.0&utm_referrer=) A clever IDE to GO
 
 ## Future Scope
+
+Advanced Transformations like Summarization, Aggregation, Data Validation and Integration can be done.
