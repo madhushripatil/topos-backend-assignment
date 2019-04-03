@@ -137,8 +137,8 @@ You may use Curl or Postman REST client to run the APIs provided.
 
 Advanced Transformations like 
 
-[]Summarization
+[] Summarization
 
-[]Aggregation
+[] Aggregation
 
-[]Data Validation and Integration can be done.
+[] Data Validation and Integration can be done.
