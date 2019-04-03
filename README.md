@@ -2,6 +2,7 @@
 
 This is a simple REST endpoint that allows users to collect and analyze Building footprints dataset. The REST endpoint supports basic APIs like inserting, updating, deleting and querying Building footprints data.
 
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project.
@@ -46,6 +47,8 @@ https://www.mongodb.com/download-center/community
 
 Create a username and password to connect to MongoDB and enable auth while starting mongodb service.
 
+Create a database to be use for the application.
+
 #### Gorilla Mux Package for routing
 
 [Gorilla Mux](https://github.com/gorilla/mux) - go get github.com/gorilla/mux
@@ -64,13 +67,53 @@ Create a username and password to connect to MongoDB and enable auth while start
 
 ## Deployment
 
-Set an environment variable 'BUILDING_ENV' to your application configuration file name.
+Set PATH variables
+
+$ vi ~/.bashrc
+
+Set GOPATH, GOROOT, PATH variables
+
+Set BUILDING_ENV variable to your application env filename, example: export BUILDING_ENV = environment
+
+Save the bashrc file and exit
+
+$ source ~/.bashrc
+
+Verify if all System variables are set by running the following command:
+
+$ go env
+
+Also check if PATH and BUILDING_ENV variables are set by running the following commands:
+
+$ echo $PATH
+
+$ echo $BUILDING_ENV
 
 Download the [Project zip](https://github.com/madhushripatil/topos-backend-assignment/archive/master.zip) to your $GOPATH/src directory.
 
+Run the following commands
+
+$ cd $GOPATH/src/topos-backend-assignment/importData
+
+$ go build importCSVToMongo.go
+$ ./importCSVToMongo
+
+$ go build importBuildingFeatTypeCSVToMongo.go
+$ ./importBuildingFeatTypeCSVToMongo
+
+$ go build importBoroughCSVToMongo.go
+$ ./importBoroughCSVToMongo
+
 Run the following commands inside the $GOPATH/src/project directory:
-go build
-go run server.go
+
+$ cd $GOPATH/src/topos-backend-assignment
+
+$ go build
+$ go run server.go
+
+The Server starts running.
+
+You can now start making API calls.
 
 ### REST API Documentation
 
