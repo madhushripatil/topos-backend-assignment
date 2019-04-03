@@ -12,7 +12,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 1. #### The Go Programming Language
 
-Go is an open source programming language that makes it easy to build simple,
+> Go is an open source programming language that makes it easy to build simple,
 reliable, and efficient software.
 
 ### Download and Install
