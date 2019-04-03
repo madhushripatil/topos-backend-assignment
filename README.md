@@ -15,9 +15,6 @@ These instructions will get you a copy of the project up and running on your loc
 Go is an open source programming language that makes it easy to build simple,
 reliable, and efficient software.
 
-Our canonical Git repository is located at https://go.googlesource.com/go.
-There is a mirror of the repository at https://github.com/golang/go.
-
 ### Download and Install
 
 #### Binary Distributions
@@ -38,7 +35,7 @@ in your web browser for source installation instructions.
 Set GOROOT, GOPOATH env variables
 
 Check if the correct values are set using
-$go env command on Linux
+$ go env
 
 #### Mongo DB
 
