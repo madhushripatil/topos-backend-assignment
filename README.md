@@ -32,10 +32,10 @@ Transformations like Splitting, Joining and Cleaning are performed on the provid
     https://golang.org/doc/install/source or load [doc/install-source.html](./doc/install-source.html)
     in your web browser for source installation instructions.
 
-Set GOROOT, GOPOATH env variables
+    Set GOROOT, GOPOATH env variables
 
-Check if the correct values are set using
-$ go env
+    Check if the correct values are set using
+    ``go env``
 
 2. #### Mongo DB
 
@@ -81,51 +81,51 @@ $ go env
 
 3. ``go env``
 
-Also check if PATH and BUILDING_ENV variables are set by running the following commands:
+    Also check if PATH and BUILDING_ENV variables are set by running the following commands:
 
-``echo $PATH``
+  ``echo $PATH``
 
-``echo $BUILDING_ENV``
+  ``echo $BUILDING_ENV``
 
-Download the [Project zip](https://github.com/madhushripatil/topos-backend-assignment/archive/master.zip) to your $GOPATH/src directory.
+    Download the [Project zip](https://github.com/madhushripatil/topos-backend-assignment/archive/master.zip) to your $GOPATH/src   directory.
 
 4. Set your Database and REST Endpoint parameters in the [development.env](https://github.com/madhushripatil/topos-backend-assignment/blob/master/development.env) file provided.
 
-There is a separate development.env file in the importData directory as well.
+    There is a separate development.env file in the importData directory as well.
 
 5. Run the following commands
 
-``cd $GOPATH/src/topos-backend-assignment/importData``
+  ``cd $GOPATH/src/topos-backend-assignment/importData``
 
-``go build importCSVToMongo.go``
+  ``go build importCSVToMongo.go``
 
-``./importCSVToMongo``
+  ``./importCSVToMongo``
 
-``go build importBuildingFeatTypeCSVToMongo.go``
+  ``go build importBuildingFeatTypeCSVToMongo.go``
 
-``./importBuildingFeatTypeCSVToMongo``
+  ``./importBuildingFeatTypeCSVToMongo``
 
-``go build importBoroughCSVToMongo.go``
+  ``go build importBoroughCSVToMongo.go``
 
-``./importBoroughCSVToMongo``
+  ``./importBoroughCSVToMongo``
 
 6. Run the following commands inside the $GOPATH/src/project directory:
 
-``cd $GOPATH/src/topos-backend-assignment``
+  ``cd $GOPATH/src/topos-backend-assignment``
 
-``go build``
+  ``go build``
 
-``go run server.go``
+  ``go run server.go``
 
-The Server starts running.
+    The Server starts running.
 
-You can now start making API calls.
+    You can now start making API calls.
 
 ### REST API Documentation
 
-Refer to the [REST API Documentation](https://documenter.getpostman.com/view/2410794/S1EH21eE)
+    Refer to the [REST API Documentation](https://documenter.getpostman.com/view/2410794/S1EH21eE)
 
-You may use Curl or Postman REST client to run the APIs provided.
+    You may use Curl or Postman REST client to run the APIs provided.
 
 ## Built With
 
@@ -135,10 +135,10 @@ You may use Curl or Postman REST client to run the APIs provided.
 
 ## Future Scope
 
-Advanced Transformations like 
+    Advanced Transformations like 
 
-[ ] Summarization
+    [ ] Summarization
 
-[ ] Aggregation
+    [ ] Aggregation
 
-[ ] Data Validation and Integration can be done.
+    [ ] Data Validation and Integration can be done.
