@@ -75,17 +75,17 @@ Set BUILDING_ENV variable to your application env filename, example: export BUIL
 
 Save the bashrc file and exit
 
-2) $ source ~/.bashrc
+2) ``$ source ~/.bashrc``
 
 Verify if all System variables are set by running the following command:
 
-3) $ go env
+3) ``$ go env``
 
 Also check if PATH and BUILDING_ENV variables are set by running the following commands:
 
-$ echo $PATH
+``$ echo $PATH``
 
-$ echo $BUILDING_ENV
+``$ echo $BUILDING_ENV``
 
 Download the [Project zip](https://github.com/madhushripatil/topos-backend-assignment/archive/master.zip) to your $GOPATH/src directory.
 
@@ -95,23 +95,23 @@ There is a separate development.env file in the importData directory as well.
 
 5) Run the following commands
 
-$ cd $GOPATH/src/topos-backend-assignment/importData
+``$ cd $GOPATH/src/topos-backend-assignment/importData``
 
-$ go build importCSVToMongo.go
-$ ./importCSVToMongo
+``$ go build importCSVToMongo.go``
+``$ ./importCSVToMongo``
 
-$ go build importBuildingFeatTypeCSVToMongo.go
-$ ./importBuildingFeatTypeCSVToMongo
+``$ go build importBuildingFeatTypeCSVToMongo.go``
+``$ ./importBuildingFeatTypeCSVToMongo``
 
-$ go build importBoroughCSVToMongo.go
-$ ./importBoroughCSVToMongo
+``$ go build importBoroughCSVToMongo.go``
+``$ ./importBoroughCSVToMongo``
 
 6) Run the following commands inside the $GOPATH/src/project directory:
 
-$ cd $GOPATH/src/topos-backend-assignment
+``$ cd $GOPATH/src/topos-backend-assignment``
 
-$ go build
-$ go run server.go
+``$ go build``
+``$ go run server.go``
 
 The Server starts running.
 
