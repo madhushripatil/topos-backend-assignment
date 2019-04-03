@@ -63,11 +63,11 @@ Create a database to be use for the application.
 
 [Application specific configuration](https://github.com/joho/godotenv) - go get github.com/joho/godotenv
 
-7. ## Deployment
+## Deployment
 
-i. Set PATH variables
+1. Set PATH variables
 
-``$ vi ~/.bashrc``
+``vi ~/.bashrc``
 
 Set GOPATH, GOROOT, PATH variables
 
@@ -75,43 +75,47 @@ Set BUILDING_ENV variable to your application env filename, example: export BUIL
 
 Save the bashrc file and exit
 
-2) ``$ source ~/.bashrc``
+2. ``source ~/.bashrc``
 
 Verify if all System variables are set by running the following command:
 
-3) ``$ go env``
+3. ``go env``
 
 Also check if PATH and BUILDING_ENV variables are set by running the following commands:
 
-``$ echo $PATH``
+``echo $PATH``
 
-``$ echo $BUILDING_ENV``
+``echo $BUILDING_ENV``
 
 Download the [Project zip](https://github.com/madhushripatil/topos-backend-assignment/archive/master.zip) to your $GOPATH/src directory.
 
-4) Set your Database and REST Endpoint parameters in the [development.env](https://github.com/madhushripatil/topos-backend-assignment/blob/master/development.env) file provided.
+4. Set your Database and REST Endpoint parameters in the [development.env](https://github.com/madhushripatil/topos-backend-assignment/blob/master/development.env) file provided.
 
 There is a separate development.env file in the importData directory as well.
 
-5) Run the following commands
+5. Run the following commands
 
-``$ cd $GOPATH/src/topos-backend-assignment/importData``
+``cd $GOPATH/src/topos-backend-assignment/importData``
 
-``$ go build importCSVToMongo.go``
-``$ ./importCSVToMongo``
+``go build importCSVToMongo.go``
 
-``$ go build importBuildingFeatTypeCSVToMongo.go``
-``$ ./importBuildingFeatTypeCSVToMongo``
+``./importCSVToMongo``
 
-``$ go build importBoroughCSVToMongo.go``
-``$ ./importBoroughCSVToMongo``
+``go build importBuildingFeatTypeCSVToMongo.go``
 
-6) Run the following commands inside the $GOPATH/src/project directory:
+``./importBuildingFeatTypeCSVToMongo``
 
-``$ cd $GOPATH/src/topos-backend-assignment``
+``go build importBoroughCSVToMongo.go``
 
-``$ go build``
-``$ go run server.go``
+``./importBoroughCSVToMongo``
+
+6. Run the following commands inside the $GOPATH/src/project directory:
+
+``cd $GOPATH/src/topos-backend-assignment``
+
+``go build``
+
+``go run server.go``
 
 The Server starts running.
 
