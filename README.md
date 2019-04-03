@@ -6,7 +6,7 @@ Transformations like Splitting, Joining and Cleaning are performed on the provid
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project.
+    These instructions will get you a copy of the project up and running on your local machine for development and testing      purposes. See deployment for notes on how to deploy the project.
 
 ### Prerequisites
 
@@ -19,18 +19,18 @@ These instructions will get you a copy of the project up and running on your loc
 
 #### Binary Distributions
 
-Official binary distributions are available at https://golang.org/dl/.
+    Official binary distributions are available at https://golang.org/dl/.
 
-After downloading a binary release, visit https://golang.org/doc/install
-or load [doc/install.html](./doc/install.html) in your web browser for installation
-instructions.
+    After downloading a binary release, visit https://golang.org/doc/install
+    or load [doc/install.html](./doc/install.html) in your web browser for installation
+    instructions.
 
 #### Install From Source
 
-If a binary distribution is not available for your combination of
-operating system and architecture, visit
-https://golang.org/doc/install/source or load [doc/install-source.html](./doc/install-source.html)
-in your web browser for source installation instructions.
+    If a binary distribution is not available for your combination of
+    operating system and architecture, visit
+    https://golang.org/doc/install/source or load [doc/install-source.html](./doc/install-source.html)
+    in your web browser for source installation instructions.
 
 Set GOROOT, GOPOATH env variables
 
@@ -39,29 +39,29 @@ $ go env
 
 2. #### Mongo DB
 
-MongoDB offers both an Enterprise and Community version of its powerful non-relational database. 
+    MongoDB offers both an Enterprise and Community version of its powerful non-relational database. 
 
-https://www.mongodb.com/download-center/community
+    https://www.mongodb.com/download-center/community
 
-Create a username and password to connect to MongoDB and enable auth while starting mongodb service.
+    Create a username and password to connect to MongoDB and enable auth while starting mongodb service.
 
-Create a database to be use for the application.
+    Create a database to be use for the application.
 
 3. #### Gorilla Mux Package for routing
 
-[Gorilla Mux](https://github.com/gorilla/mux) - go get github.com/gorilla/mux
+    [Gorilla Mux](https://github.com/gorilla/mux) - go get github.com/gorilla/mux
 
 4. #### Mgo Package for MongoDB connections
 
-[Rich MongoDB driver](https://gopkg.in/mgo.v2) - go get gopkg.in/mgo.v2
+    [Rich MongoDB driver](https://gopkg.in/mgo.v2) - go get gopkg.in/mgo.v2
 
 5. #### bson Package for BSON GO specification
 
-[GO BSON Specification implementation](https://gopkg.in/mgo.v2/bson) - go get gopkg.in/mgo.v2/bson
+    [GO BSON Specification implementation](https://gopkg.in/mgo.v2/bson) - go get gopkg.in/mgo.v2/bson
 
 6. #### joho godotenv Package for loading env file
 
-[Application specific configuration](https://github.com/joho/godotenv) - go get github.com/joho/godotenv
+    [Application specific configuration](https://github.com/joho/godotenv) - go get github.com/joho/godotenv
 
 ## Deployment
 
@@ -69,15 +69,15 @@ Create a database to be use for the application.
 
 ``vi ~/.bashrc``
 
-Set GOPATH, GOROOT, PATH variables
+    Set GOPATH, GOROOT, PATH variables
 
-Set BUILDING_ENV variable to your application env filename, example: export BUILDING_ENV = environment
+    Set BUILDING_ENV variable to your application env filename, example: export BUILDING_ENV = environment
 
-Save the bashrc file and exit
+    Save the bashrc file and exit
 
 2. ``source ~/.bashrc``
 
-Verify if all System variables are set by running the following command:
+    Verify if all System variables are set by running the following command:
 
 3. ``go env``
 
