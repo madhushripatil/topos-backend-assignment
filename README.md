@@ -92,6 +92,10 @@ $ echo $BUILDING_ENV
 
 Download the [Project zip](https://github.com/madhushripatil/topos-backend-assignment/archive/master.zip) to your $GOPATH/src directory.
 
+Set your Database and REST Endpoint parameters in the [development.env](https://github.com/madhushripatil/topos-backend-assignment/blob/master/development.env) file provided.
+
+There is a separate development.env file in the importData directory as well.
+
 Run the following commands
 
 $ cd $GOPATH/src/topos-backend-assignment/importData
@@ -121,9 +125,6 @@ You can now start making API calls.
 Refer to the [REST API Documentation](https://documenter.getpostman.com/view/2410794/S1EH21eE)
 
 You may use Curl or Postman REST client to run the APIs provided.
-
-Set your Database and REST Endpoint parameters in the [development.env](https://github.com/madhushripatil/topos-backend-assignment/blob/master/development.env) file provided.
-
 
 ## Built With
 
