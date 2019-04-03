@@ -10,7 +10,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-#### The Go Programming Language
+1. #### The Go Programming Language
 
 Go is an open source programming language that makes it easy to build simple,
 reliable, and efficient software.
@@ -37,7 +37,7 @@ Set GOROOT, GOPOATH env variables
 Check if the correct values are set using
 $ go env
 
-#### Mongo DB
+2. #### Mongo DB
 
 MongoDB offers both an Enterprise and Community version of its powerful non-relational database. 
 
@@ -47,25 +47,25 @@ Create a username and password to connect to MongoDB and enable auth while start
 
 Create a database to be use for the application.
 
-#### Gorilla Mux Package for routing
+3. #### Gorilla Mux Package for routing
 
 [Gorilla Mux](https://github.com/gorilla/mux) - go get github.com/gorilla/mux
 
-#### Mgo Package for MongoDB connections
+4. #### Mgo Package for MongoDB connections
 
 [Rich MongoDB driver](https://gopkg.in/mgo.v2) - go get gopkg.in/mgo.v2
 
-#### bson Package for BSON GO specification
+5. #### bson Package for BSON GO specification
 
 [GO BSON Specification implementation](https://gopkg.in/mgo.v2/bson) - go get gopkg.in/mgo.v2/bson
 
-#### joho godotenv Package for loading env file
+6. #### joho godotenv Package for loading env file
 
 [Application specific configuration](https://github.com/joho/godotenv) - go get github.com/joho/godotenv
 
-## Deployment
+7. ## Deployment
 
-1) Set PATH variables
+i. Set PATH variables
 
 ``$ vi ~/.bashrc``
 
@@ -131,4 +131,10 @@ You may use Curl or Postman REST client to run the APIs provided.
 
 ## Future Scope
 
-Advanced Transformations like Summarization, Aggregation, Data Validation and Integration can be done.
+Advanced Transformations like 
+
+[]Summarization
+
+[]Aggregation
+
+[]Data Validation and Integration can be done.
