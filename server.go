@@ -11,18 +11,43 @@ import (
 	"topos-backend-assignment/db"
 )
 
+// DbName exported
 var DbName string
+
+// BuildingCollectionName exported
 var BuildingCollectionName string
+
+// DemolishedCollectionName exported
 var DemolishedCollectionName string
+
+// ServerPort exported
 var ServerPort string
+
+// DBHost exported
 var DBHost string
+
+// DBUsername exported
 var DBUsername string
+
+// DBPassword exported
 var DBPassword string
+
+// DBTimeout exported
 var DBTimeout string
+
+// UserLoginCollectionName exported
 var UserLoginCollectionName string
+
+// BldngFeatTypeCollectionName exported
 var BldngFeatTypeCollectionName string
+
+// BoroughCollectionName exported
 var BoroughCollectionName string
+
+// Logger exported
 var Logger *log.Logger
+
+// JwtKey exported
 var JwtKey []byte
 
 /**
