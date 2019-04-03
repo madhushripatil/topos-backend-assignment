@@ -1,8 +1,8 @@
 # Building Footprint Data collector and Analyzer
 
-This is a simple ETL process that allows users to collect and analyze Building footprints dataset. It is a REST endpoint supporting basic APIs like inserting, updating, deleting and querying Building footprints data.
+    This is a simple ETL process that allows users to collect and analyze Building footprints dataset. It is a REST endpoint supporting basic APIs like inserting, updating, deleting and querying Building footprints data.
 
-Transformations like Splitting, Joining and Cleaning are performed on the provided dataset.
+    Transformations like Splitting, Joining and Cleaning are performed on the provided dataset.
 
 ## Getting Started
 
@@ -12,8 +12,8 @@ Transformations like Splitting, Joining and Cleaning are performed on the provid
 
 1. #### The Go Programming Language
 
-    Go is an open source programming language that makes it easy to build simple,
-    reliable, and efficient software.
+        Go is an open source programming language that makes it easy to build simple,
+        reliable, and efficient software.
 
 ### Download and Install
 
@@ -67,65 +67,65 @@ Transformations like Splitting, Joining and Cleaning are performed on the provid
 
 1. Set PATH variables
 
-``vi ~/.bashrc``
+   ``vi ~/.bashrc``
 
-    Set GOPATH, GOROOT, PATH variables
+        Set GOPATH, GOROOT, PATH variables
 
-    Set BUILDING_ENV variable to your application env filename, example: export BUILDING_ENV = environment
+        Set BUILDING_ENV variable to your application env filename, example: export BUILDING_ENV = environment
 
-    Save the bashrc file and exit
+        Save the bashrc file and exit
 
 2. ``source ~/.bashrc``
 
-    Verify if all System variables are set by running the following command:
+        Verify if all System variables are set by running the following command:
 
 3. ``go env``
 
-    Also check if PATH and BUILDING_ENV variables are set by running the following commands:
+        Also check if PATH and BUILDING_ENV variables are set by running the following commands:
 
-  ``echo $PATH``
+   ``echo $PATH``
 
-  ``echo $BUILDING_ENV``
+   ``echo $BUILDING_ENV``
 
-    Download the [Project zip](https://github.com/madhushripatil/topos-backend-assignment/archive/master.zip) to your $GOPATH/src   directory.
+        Download the [Project zip](https://github.com/madhushripatil/topos-backend-assignment/archive/master.zip) to your $GOPATH/src   directory.
 
 4. Set your Database and REST Endpoint parameters in the [development.env](https://github.com/madhushripatil/topos-backend-assignment/blob/master/development.env) file provided.
 
-    There is a separate development.env file in the importData directory as well.
+        There is a separate development.env file in the importData directory as well.
 
 5. Run the following commands
 
-  ``cd $GOPATH/src/topos-backend-assignment/importData``
+    ``cd $GOPATH/src/topos-backend-assignment/importData``
 
-  ``go build importCSVToMongo.go``
+    ``go build importCSVToMongo.go``
 
-  ``./importCSVToMongo``
+    ``./importCSVToMongo``
 
-  ``go build importBuildingFeatTypeCSVToMongo.go``
+    ``go build importBuildingFeatTypeCSVToMongo.go``
 
-  ``./importBuildingFeatTypeCSVToMongo``
+    ``./importBuildingFeatTypeCSVToMongo``
 
-  ``go build importBoroughCSVToMongo.go``
+    ``go build importBoroughCSVToMongo.go``
 
-  ``./importBoroughCSVToMongo``
+    ``./importBoroughCSVToMongo``
 
 6. Run the following commands inside the $GOPATH/src/project directory:
 
-  ``cd $GOPATH/src/topos-backend-assignment``
+    ``cd $GOPATH/src/topos-backend-assignment``
 
-  ``go build``
+    ``go build``
 
-  ``go run server.go``
+    ``go run server.go``
 
-    The Server starts running.
+        The Server starts running.
 
-    You can now start making API calls.
+        You can now start making API calls.
 
 ### REST API Documentation
 
-    Refer to the [REST API Documentation](https://documenter.getpostman.com/view/2410794/S1EH21eE)
+        Refer to the [REST API Documentation](https://documenter.getpostman.com/view/2410794/S1EH21eE)
 
-    You may use Curl or Postman REST client to run the APIs provided.
+        You may use Curl or Postman REST client to run the APIs provided.
 
 ## Built With
 
