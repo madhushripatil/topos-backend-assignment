@@ -67,7 +67,7 @@ Create a database to be use for the application.
 
 1) Set PATH variables
 
-$ vi ~/.bashrc
+``$ vi ~/.bashrc``
 
 Set GOPATH, GOROOT, PATH variables
 
